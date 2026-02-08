@@ -20,13 +20,22 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    
+
                     @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="feather-check-circle me-2"></i> {{ session('success') }}
+            
+                        @if(session('new_password'))
+                            <div class="mt-2 p-3 bg-white rounded border border-success text-dark">
+                                <strong>PENTING!</strong> Password untuk member ini adalah: 
+                                <br>
+                                <h3 class="text-success my-2 select-all">{{ session('new_password') }}</h3>
+                                <small class="text-muted">Harap catat atau berikan password ini ke member, karena tidak akan muncul lagi.</small>
+                            </div>
+                        @endif
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
-
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped dt-responsive nowrap">
                             <thead>

@@ -7,6 +7,7 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+ use Illuminate\Support\Str;
 
 class MemberController extends Controller
 {
@@ -27,49 +28,43 @@ class MemberController extends Controller
         return view('admin.members.create');
     }
 
-    // 3. FITUR MENYIMPAN DATA MEMBER BARU (Logic Penting!)
-    public function store(Request $request)
-    {
-        // A. Validasi Input
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'phone_number' => 'required',
-            'gender' => 'required',
-            'join_date' => 'required|date',
-            'duration' => 'required|integer', // Durasi paket dalam bulan (1 bulan, 3 bulan, dst)
+// 3. FITUR MENYIMPAN DATA MEMBER BARU (Logic Penting!)
+public function store(Request $request)
+{
+    // ... (Validasi tetap sama) ...
+
+    // 1. GENERATE PASSWORD ACAK (8 Karakter)
+    // Contoh hasil: 'k9LmP2xQ'
+    $generatedPassword = Str::random(8); 
+
+    DB::transaction(function () use ($request, $generatedPassword) {
+        
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            // 2. GUNAKAN PASSWORD ACAK TADI
+            'password' => Hash::make($generatedPassword), 
+            'role' => 'member',
         ]);
 
-        // B. Mulai Transaksi Database
-        // Gunanya: Jika ada error saat simpan detail, akun login juga batal dibuat.
-        DB::transaction(function () use ($request) {
-            
-            // Langkah 1: Buat Akun Login (Tabel Users)
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make('password123'), // Password default
-                'role' => 'member',
-            ]);
+        $expiryDate = date('Y-m-d', strtotime("+$request->duration months", strtotime($request->join_date)));
 
-            // Hitung kapan masa aktif berakhir berdasarkan durasi yang dipilih
-            $expiryDate = date('Y-m-d', strtotime("+$request->duration months", strtotime($request->join_date)));
+        Member::create([
+            'user_id' => $user->id, 
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+            'gender' => $request->gender,
+            'join_date' => $request->join_date,
+            'expiry_date' => $expiryDate, 
+            'status' => 'active',
+        ]);
+    });
 
-            // Langkah 2: Buat Data Detail Member (Tabel Members)
-            Member::create([
-                'user_id' => $user->id, // Ambil ID dari user yang baru dibuat di atas
-                'phone_number' => $request->phone_number,
-                'address' => $request->address,
-                'gender' => $request->gender,
-                'join_date' => $request->join_date,
-                'expiry_date' => $expiryDate, // Otomatis terisi
-                'status' => 'active',
-            ]);
-        });
-
-        // C. Kembali ke halaman daftar member dengan pesan sukses
-        return redirect()->route('members.index')->with('success', 'Member berhasil didaftarkan!');
-    }
+    // 3. KIRIM PASSWORD KE VIEW AGAR BISA DILIHAT ADMIN
+    return redirect()->route('admin.members.index')
+        ->with('success', 'Member berhasil didaftarkan!')
+        ->with('new_password', $generatedPassword); // Bawa password mentah
+}
 
     // 4. MENAMPILKAN FORM EDIT
     public function edit($id)
