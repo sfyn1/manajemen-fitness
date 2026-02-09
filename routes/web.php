@@ -18,32 +18,26 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // --- GROUP ROUTE BERDASARKAN ROLE (Middleware Auth) ---
 // Artinya: Hanya user yang sudah login yang bisa akses ini
 Route::middleware(['auth'])->group(function () {
-
     // 1. Dashboard OWNER (Placeholder)
     Route::get('/owner/dashboard', function () {
         return "<h1>Halo Owner! Ini halaman Laporan & Statistik.</h1>";
     })->name('owner.dashboard');
-
     // 2. Dashboard MEMBER (Placeholder)
     Route::get('/member/dashboard', function () {
         return "<h1>Halo Member! Ini halaman profil & jadwal latihan Anda.</h1>";
     })->name('member.dashboard');
-
     // 3. Dashboard PERSONAL TRAINER (Placeholder)
     Route::get('/pt/dashboard', function () {
         return "<h1>Halo Coach/PT! Ini halaman jadwal melatih Anda.</h1>";
     })->name('pt.dashboard');
-    
     // 4. Dashboard COACH (Placeholder) - Bisa disatukan dengan PT kalau mirip
     Route::get('/coach/dashboard', function () {
         return "<h1>Halo Coach Kelas! Ini halaman jadwal kelas besar.</h1>";
     })->name('coach.dashboard');
-
 });
 
 // --- GRUP ROUTE ADMIN ---
 Route::prefix('admin')->name('admin.')->group(function () {
-    
     // 1. MODUL MEMBERSHIP
     // Semua route ini akan bernama: admin.members.xxx
     Route::name('members.')->group(function () {
@@ -63,8 +57,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/scan', [PresenceController::class, 'index'])->name('scan');
         // Proses Simpan Data Scan
         Route::post('/scan', [PresenceController::class, 'store'])->name('store');
-            
         // HALAMAN BARU: Kehadiran Member (Statistik)
         Route::get('/presence-history', [PresenceController::class, 'history'])->name('history');
-        });
+        // --- TAMBAHAN BARU: ROUTE LAPORAN ---
+        Route::get('/presences/report', [PresenceController::class, 'report'])->name('report');
+    });
 });

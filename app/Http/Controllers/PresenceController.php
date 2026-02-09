@@ -101,4 +101,21 @@ class PresenceController extends Controller
 
         return view('admin.presences.history', compact('members'));
     }
+
+    // 4. HALAMAN LAPORAN HARIAN/BULANAN (FILTER TANGGAL)
+    public function report(Request $request)
+    {
+        // Default tanggal: Awal bulan ini sampai Hari ini
+        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->input('end_date', Carbon::now()->format('Y-m-d'));
+
+        // Query Data Presensi dengan Range Tanggal
+        $presences = Presence::with('member.user')
+            ->whereDate('check_in_time', '>=', $startDate)
+            ->whereDate('check_in_time', '<=', $endDate)
+            ->orderBy('check_in_time', 'desc')
+            ->get();
+
+        return view('admin.presences.report', compact('presences', 'startDate', 'endDate'));
+    }
 }
