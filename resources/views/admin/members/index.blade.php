@@ -1,93 +1,239 @@
-@extends('layouts.admin')
-
-@section('content')
+@extends('layouts.admin') @section('content')
 <div class="container-fluid">
-    
-    <div class="row">
+
+    <!-- PAGE HEADER - MODERN DESIGN -->
+    <div class="row mb-4">
         <div class="col-12">
-            <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0">Daftar Member</h4>
-                <div class="page-title-right">
-                    <a href="{{ route('admin.members.create') }}" class="btn btn-primary btn-sm">
-                        + Tambah Member Baru
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h2 class="mb-1 fw-bold">Daftar Member</h2>
+                    <p class="text-muted mb-0">Kelola data member dan keanggotaan gym</p>
+                </div>
+                <div>
+                    <a href="{{ route('admin.members.create') }}" class="btn btn-primary shadow-sm">
+                        <i class="feather-user-plus me-2"></i>
+                        Tambah Member Baru
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-3">
+    <!-- SUCCESS ALERT - MODERN STYLE -->
+    @if(session('success'))
+    <div class="row mb-3">
         <div class="col-12">
-            <div class="card">
-                <div class="card-body">
+            <div
+                class="alert alert-success alert-dismissible fade show border-0 shadow-sm"
+                role="alert">
+                <div class="d-flex align-items-start">
+                    <div class="me-3">
+                        <i class="feather-check-circle fs-3 text-success"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="alert-heading mb-2">Berhasil!</h5>
+                        <p class="mb-0">{{ session('success') }}</p>
 
-                    @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="feather-check-circle me-2"></i> {{ session('success') }}
-            
                         @if(session('new_password'))
-                            <div class="mt-2 p-3 bg-white rounded border border-success text-dark">
-                                <strong>PENTING!</strong> Password untuk member ini adalah: 
-                                <br>
-                                <h3 class="text-success my-2 select-all">{{ session('new_password') }}</h3>
-                                <small class="text-muted">Harap catat atau berikan password ini ke member, karena tidak akan muncul lagi.</small>
+                        <div class="mt-3 p-3 bg-white rounded border border-success">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="feather-lock text-success me-2"></i>
+                                <strong class="text-dark">Password Member Baru</strong>
                             </div>
-                        @endif
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <div class="bg-light p-3 rounded mb-2">
+                                <h3 class="text-success mb-0 text-center fw-bold">{{ session('new_password') }}</h3>
+                            </div>
+                            <small class="text-muted">
+                                <i class="feather-alert-circle me-1"></i>
+                                Harap catat password ini karena tidak akan muncul lagi.
+                            </small>
                         </div>
-                    @endif
+                        @endif
+                    </div>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- MEMBER TABLE - MODERN CARD -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped dt-responsive nowrap">
-                            <thead>
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
                                 <tr>
-                                    <th>No</th>
-                                    <th>Nama</th>
-                                    <th>No HP</th>
-                                    <th>Gender</th>
-                                    <th>Tgl Gabung</th>
-                                    <th>Masa Aktif</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
+                                    <th class="px-4 py-3 text-muted fw-semibold" style="width: 50px;">NO</th>
+                                    <th class="py-3 text-muted fw-semibold">NAMA</th>
+                                    <th class="py-3 text-muted fw-semibold">NO HP</th>
+                                    <th class="py-3 text-muted fw-semibold">GENDER</th>
+                                    <th class="py-3 text-muted fw-semibold">TGL GABUNG</th>
+                                    <th class="py-3 text-muted fw-semibold">MASA AKTIF</th>
+                                    <th class="py-3 text-muted fw-semibold">STATUS</th>
+                                    <th class="py-3 text-muted fw-semibold text-center" style="width: 220px;">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($members as $index => $user)
+                                @forelse($members as $index => $user)
                                 <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->member->phone_number ?? '-' }}</td>
-                                    <td>{{ $user->member->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-                                    <td>{{ $user->member->join_date }}</td>
-                                    <td>
-                                        {{ $user->member->expiry_date }}
-                                        @if($user->member->expiry_date < date('Y-m-d'))
-                                            <span class="badge bg-danger">Expired</span>
-                                        @else
-                                            <span class="badge bg-success">Aktif</span>
-                                        @endif
+                                    <td class="px-4">
+                                        <span class="text-muted fw-semibold">{{ $index + 1 }}</span>
                                     </td>
-                                    <td>{{ ucfirst($user->member->status) }}</td>
                                     <td>
-                                        <a href="{{ route('admin.members.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <form action="{{ route('admin.members.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus member ini? Data yang dihapus tidak bisa dikembalikan.')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                        </form>
-                                        <a href="{{ route('admin.members.card', $user->id) }}" class="btn btn-info btn-sm">
-                                            <i class="feather-credit-card"></i>
-                                        </a>
+                                        <div class="d-flex align-items-center">
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">{{ $user->name }}</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark">{{ $user->member->phone_number ?? '-' }}</span>
+                                    </td>
+                                    <td>
+                                        {{ $user->member->gender }}
+                                    </td>
+                                    <td>
+                                        <span class="text-dark">{{ \Carbon\Carbon::parse($user->member->join_date)->format('d M Y') }}</span>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <span class="text-dark d-block">{{ \Carbon\Carbon::parse($user->member->expiry_date)->format('d M Y') }}</span>
+                                            @if($user->member->expiry_date < date('Y-m-d'))
+                                            <small class="text-danger">Expired</small>
+                                            @else
+                                            <small class="text-success">Aktif</small>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark">{{ ucfirst($user->member->status) }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-center">
+
+                                            <!-- TOMBOL SHOW -->
+                                            <a
+                                                href="{{ route('admin.members.show', $user->id) }}"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                title="Show">
+                                                <i class="feather-eye"></i>
+                                            </a>
+
+                                            <!-- TOMBOL EDIT -->
+                                            <a
+                                                href="{{ route('admin.members.edit', $user->id) }}"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                title="Edit Member">
+                                                <i class="feather-edit-2"></i>
+                                            </a>
+
+                                            <!-- TOMBOL KARTU -->
+                                            <a
+                                                href="{{ route('admin.members.card', $user->id) }}"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                title="Lihat Kartu Member">
+                                                <i class="feather-credit-card"></i>
+                                            </a>
+
+                                            <!-- TOMBOL HAPUS -->
+                                            <form
+                                                action="{{ route('admin.members.destroy', $user->id) }}"
+                                                method="POST"
+                                                class="d-inline"
+                                                onsubmit="return confirm('Yakin ingin menghapus member ini? Data yang dihapus tidak bisa dikembalikan.')">
+                                                @csrf @method('DELETE')
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    title="Hapus Member">
+                                                    <i class="feather-trash-2"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                <tr>
+                                    <td colspan="8" class="text-center py-5">
+                                        <div class="text-muted">
+                                            <i class="feather-users" style="font-size: 48px; opacity: 0.3;"></i>
+                                            <h5 class="mt-3 text-muted">Belum Ada Member</h5>
+                                            <p class="mb-0">Klik tombol "Tambah Member Baru" untuk menambahkan member pertama.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
 </div>
+
+<style>
+    /* Modern Table Styling */
+    .table > :not(caption) > * > * {
+        padding: 1rem 0.75rem;
+        border-bottom-width: 1px;
+        border-bottom-color: #f0f0f0;
+    }
+
+    .table thead th {
+        border-bottom: 2px solid #e9ecef;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+    }
+
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Avatar Styling */
+    .avatar-sm {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    /* Modern Button Hover Effects */
+    .btn:hover {
+        transform: translateY(-2px);
+        transition: all 0.2s ease;
+    }
+
+    /* Badge Modern Styling */
+    .badge {
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+    }
+
+    /* Alert Modern Styling */
+    .alert {
+        border-radius: 0.5rem;
+    }
+
+    /* Pink color for female gender */
+    .bg-pink {
+        background-color: #ff69b4 !important;
+    }
+
+    .text-pink {
+        color: #ff69b4 !important;
+    }
+</style>
 @endsection

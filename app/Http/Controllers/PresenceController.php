@@ -61,6 +61,10 @@ class PresenceController extends Controller
                             ->whereDate('check_in_time', Carbon::today())
                             ->count();
 
+        $photoUrl = $member->photo 
+            ? asset('storage/' . $member->photo) 
+            : asset('template/assets/images/avatar/1.png');
+
         return response()->json([
             'status' => 'success',
             'message' => 'Silakan Masuk!',
@@ -69,7 +73,7 @@ class PresenceController extends Controller
             'join_date' => date('d M Y', strtotime($member->join_date)),
             'expiry_date' => date('d M Y', strtotime($member->expiry_date)),
             'visit_count' => $visitCountToday, // Kunjungan ke-berapa hari ini
-            'photo' => asset('template/assets/images/avatar/1.png'),
+            'photo' => $photoUrl,
             'audio' => 'success'
         ]);
     }

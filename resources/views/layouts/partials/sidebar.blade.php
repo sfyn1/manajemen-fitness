@@ -81,6 +81,28 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon">
+                            <i class="feather-calendar"></i>
+                        </span>
+                        <span class="nxl-mtext">Manajemen Jadwal</span>
+                        <span class="nxl-arrow">
+                            <i class="feather-chevron-right"></i>
+                        </span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item">
+                            <a class="nxl-link" href="{{ route('admin.coaches.index') }}">Data Pelatih (PT)</a>
+                        </li>
+                        <li class="nxl-item">
+                            <a class="nxl-link" href="{{ route('admin.classtypes.index') }}">Jenis Kelas</a>
+                        </li>
+                        <li class="nxl-item">
+                            <a class="nxl-link" href="{{ route('admin.schedules.index') }}">Atur Jadwal</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

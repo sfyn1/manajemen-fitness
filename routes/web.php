@@ -47,6 +47,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/members/{id}/edit', [MemberController::class, 'edit'])->name('edit');
         Route::put('/members/{id}', [MemberController::class, 'update'])->name('update');
         Route::delete('/members/{id}', [MemberController::class, 'destroy'])->name('destroy');
+        Route::get('/members/{id}/show', [MemberController::class, 'show'])->name('show');
         Route::get('/members/{id}/card', [MemberController::class, 'card'])->name('card');
         Route::post('/members/print-pdf-image', [MemberController::class, 'printPdfImage'])->name('print-pdf-image');
     });
@@ -61,5 +62,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/presence-history', [PresenceController::class, 'history'])->name('history');
         // --- TAMBAHAN BARU: ROUTE LAPORAN ---
         Route::get('/presences/report', [PresenceController::class, 'report'])->name('report');
+    });
+
+    // 3. MODUL JADWAL (DATA MASTER)
+    Route::name('coaches.')->group(function () {
+        Route::get('/coaches', [App\Http\Controllers\CoachController::class, 'index'])->name('index');
+        Route::post('/coaches', [App\Http\Controllers\CoachController::class, 'store'])->name('store');
+        Route::delete('/coaches/{id}', [App\Http\Controllers\CoachController::class, 'destroy'])->name('destroy');
+    });
+    Route::name('classtypes.')->group(function () {
+        Route::get('/classtypes', [App\Http\Controllers\ClassTypeController::class, 'index'])->name('index');
+        Route::post('/classtypes', [App\Http\Controllers\ClassTypeController::class, 'store'])->name('store');
+        Route::delete('/classtypes/{id}', [App\Http\Controllers\ClassTypeController::class, 'destroy'])->name('destroy');
+    });
+    Route::name('schedules.')->group(function () {
+    Route::get('/schedules', [App\Http\Controllers\ScheduleController::class, 'index'])->name('index');
+    Route::post('/schedules', [App\Http\Controllers\ScheduleController::class, 'store'])->name('store');
+    Route::delete('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'destroy'])->name('destroy');
     });
 });

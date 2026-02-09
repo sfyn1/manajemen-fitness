@@ -47,7 +47,7 @@
 
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{{ route('admin.members.index') }}" class="btn btn-secondary">Batal</a>
-                            <button type="submit" class="btn btn-warning">Update Data</button>
+                            <button type="submit" class="btn btn-primary shadow-sm">Update Data</button>
                         </div>
                     </form>
                 </div>
