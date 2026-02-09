@@ -34,8 +34,8 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Jenis Kelamin</label>
                                 <select name="gender" class="form-select" required>
-                                    <option value="L" {{ $user->member->gender == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                                    <option value="P" {{ $user->member->gender == 'P' ? 'selected' : '' }}>Perempuan</option>
+                                    <option value="Laki-Laki" {{ $user->member->gender == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="Perempuan" {{ $user->member->gender == 'P' ? 'selected' : '' }}>Perempuan</option>
                                 </select>
                             </div>
                         </div>
@@ -45,10 +45,21 @@
                             <textarea name="address" class="form-control" rows="3">{{ old('address', $user->member->address) }}</textarea>
                         </div>
 
+                        <!-- SUBMIT BUTTONS -->
+                <div class="row mt-5">
+                    <div class="col-12">
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="{{ route('admin.members.index') }}" class="btn btn-secondary">Batal</a>
-                            <button type="submit" class="btn btn-primary shadow-sm">Update Data</button>
+                            <a href="{{ route('admin.members.index') }}" class="btn btn-light px-4">
+                                <i class="feather-x me-2"></i> Batal
+                            </a>
+                            <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                                <i class="feather-save me-2"></i> Simpan
+                            </button>
                         </div>
+                    </div>
+                </div>
+
+
                     </form>
                 </div>
             </div>
