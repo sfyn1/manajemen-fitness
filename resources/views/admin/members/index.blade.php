@@ -74,6 +74,9 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                         </form>
+                                        <a href="{{ route('admin.members.card', $user->id) }}" class="btn btn-info btn-sm">
+                                            <i class="feather-credit-card"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach

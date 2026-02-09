@@ -7,7 +7,9 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
- use Illuminate\Support\Str;
+use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class MemberController extends Controller
 {
@@ -117,5 +119,35 @@ public function store(Request $request)
         $user->delete();
 
         return redirect()->route('admin.members.index')->with('success', 'Data member berhasil dihapus!');
+    }
+
+    // 7. TAMPILKAN KARTU MEMBER (QR CODE)
+    public function card($id)
+    {
+        $user = User::with('member')->findOrFail($id);
+        
+        // Kita generate data sederhana untuk QR, misal: "MEMBER-123"
+        // Atau pakai ID membernya langsung agar aman saat di-scan
+        $qrData = $user->member->id; 
+
+        return view('admin.members.card', compact('user', 'qrData'));
+    }
+
+    // 8. (REVISI) DOWNLOAD PDF DARI GAMBAR (SUPAYA TAMPILAN SAMA PERSIS)
+    public function printPdfImage(Request $request)
+    {
+        $imageData = $request->input('image');
+        $memberName = $request->input('name');
+
+        // Bersihkan header data URI (data:image/jpeg;base64,...)
+        // agar bisa dibaca oleh dompdf jika perlu, atau langsung di view
+        
+        $pdf = Pdf::loadView('admin.members.pdf_preview', compact('imageData'));
+        
+        // Set ukuran kertas sesuai kartu ID Card (Landscape)
+        // 85.6mm x 53.98mm = approx 242.6 x 153 points
+        $pdf->setPaper([0, 0, 242.65, 153], 'portrait'); 
+
+        return $pdf->download('Kartu-Member-'.$memberName.'.pdf');
     }
 }

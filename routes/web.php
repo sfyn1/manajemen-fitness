@@ -3,11 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PresenceController;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
 
 // --- ROUTE UNTUK LOGIN & LOGOUT ---
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -41,30 +41,30 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-
-
-// ... kode route lainnya ...
-
-// Grup Route khusus untuk Admin
-// (Nanti kita tambahkan middleware 'auth' & 'admin' di sini agar aman)
-Route::prefix('admin')->name('admin.members.')->group(function () {
+// --- GRUP ROUTE ADMIN ---
+Route::prefix('admin')->name('admin.')->group(function () {
     
-    // URL: /admin/members (Daftar Member)
-    Route::get('/members', [MemberController::class, 'index'])->name('index');
+    // 1. MODUL MEMBERSHIP
+    // Semua route ini akan bernama: admin.members.xxx
+    Route::name('members.')->group(function () {
+        Route::get('/members', [MemberController::class, 'index'])->name('index');
+        Route::get('/members/create', [MemberController::class, 'create'])->name('create');
+        Route::post('/members', [MemberController::class, 'store'])->name('store');
+        Route::get('/members/{id}/edit', [MemberController::class, 'edit'])->name('edit');
+        Route::put('/members/{id}', [MemberController::class, 'update'])->name('update');
+        Route::delete('/members/{id}', [MemberController::class, 'destroy'])->name('destroy');
+        Route::get('/members/{id}/card', [MemberController::class, 'card'])->name('card');
+        Route::post('/members/print-pdf-image', [MemberController::class, 'printPdfImage'])->name('print-pdf-image');
+    });
 
-    // URL: /admin/members/create (Form Tambah)
-    Route::get('/members/create', [MemberController::class, 'create'])->name('create');
-
-    // URL: /admin/members/store (Proses Simpan)
-    Route::post('/members', [MemberController::class, 'store'])->name('store');
-
-    // URL: /admin/members/{id}/edit (Form Edit)
-    Route::get('/members/{id}/edit', [MemberController::class, 'edit'])->name('edit');
-
-    // URL: /admin/members/{id} (Proses Update - method PUT)
-    Route::put('/members/{id}', [MemberController::class, 'update'])->name('update');
-
-    // URL: /admin/members/{id} (Proses Hapus - method DELETE)
-    Route::delete('/members/{id}', [MemberController::class, 'destroy'])->name('destroy');
-}); 
-
+    // 2. MODUL PRESENSI (SCANNER)
+    Route::name('presences.')->group(function () {
+        // Halaman Scan
+        Route::get('/scan', [PresenceController::class, 'index'])->name('scan');
+        // Proses Simpan Data Scan
+        Route::post('/scan', [PresenceController::class, 'store'])->name('store');
+            
+        // HALAMAN BARU: Kehadiran Member (Statistik)
+        Route::get('/presence-history', [PresenceController::class, 'history'])->name('history');
+        });
+});

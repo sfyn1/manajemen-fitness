@@ -9,7 +9,6 @@ class Member extends Model
 {
     use HasFactory;
 
-    // Field yang boleh diisi
     protected $fillable = [
         'user_id',
         'phone_number',
@@ -20,9 +19,16 @@ class Member extends Model
         'status',
     ];
 
-    // RELASI: Data Member ini milik satu User
+    // Relasi ke User (Sudah ada sebelumnya)
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // --- TAMBAHKAN BAGIAN INI ---
+    // Relasi ke Presence (Satu Member punya Banyak Kehadiran)
+    public function presences()
+    {
+        return $this->hasMany(Presence::class);
     }
 }
