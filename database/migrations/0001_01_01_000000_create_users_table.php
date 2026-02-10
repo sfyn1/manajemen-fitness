@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             
             // TAMBAHAN KHUSUS SKRIPSI ANDA:
-            $table->enum('role', ['admin', 'owner', 'member', 'pt', 'coach'])->default('member');
+            $table->enum('role', ['admin', 'owner', 'member', 'coach'])->default('member');
             
             $table->rememberToken();
             $table->timestamps();
