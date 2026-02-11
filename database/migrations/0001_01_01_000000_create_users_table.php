@@ -11,29 +11,32 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Tabel USERS (Ditambah kolom 'role')
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            
+            // --- INI PERUBAHANNYA (LENGKAP) ---
+            $table->string('phone_number')->nullable()->unique(); // Login/WA
+            $table->enum('role', ['admin', 'owner', 'coach', 'member'])->default('member');
+            $table->string('otp_code')->nullable(); // Kode OTP Email
+            $table->timestamp('otp_expires_at')->nullable(); // Expired OTP
+            $table->boolean('must_change_password')->default(false); // Keamanan Member
+            // -----------------------------------
+
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            
-            // TAMBAHAN KHUSUS SKRIPSI ANDA:
-            $table->enum('role', ['admin', 'owner', 'member', 'coach'])->default('member');
-            
             $table->rememberToken();
             $table->timestamps();
         });
 
-        // 2. Tabel PASSWORD RESET (Bawaan)
+        // ... (kode tabel password_reset_tokens dan sessions biarkan saja di bawahnya)
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
 
-        // 3. Tabel SESSIONS (Bawaan - Penting agar tidak error session lagi)
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();

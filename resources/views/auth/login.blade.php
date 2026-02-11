@@ -44,6 +44,12 @@
                     </div>
                 @endif
 
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <form action="{{ route('login.post') }}" method="POST" class="w-100">
                     @csrf
                     
@@ -63,10 +69,12 @@
                 </form>
 
                 <div class="mt-4 text-center">
-                    <p class="text-muted mb-0">Lupa password? <a href="#" class="fw-bold text-primary">Hubungi Admin</a></p>
+                    <p class="text-muted mb-0">Lupa password? 
+                        <a href="{{ route('password.request') }}" class="fw-bold text-primary">Reset di sini</a>
+                    </p>
                     <p class="text-muted mt-3 fs-12">Kembali ke <a href="{{ url('/') }}" class="fw-bold text-dark">Halaman Utama</a></p>
                 </div>
-            </div>
+                </div>
         </div>
     </div>
 

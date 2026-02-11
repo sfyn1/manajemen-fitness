@@ -236,4 +236,61 @@
         color: #ff69b4 !important;
     }
 </style>
+
+
+{{-- SWEETALERT2 NOTIFICATIONS & WHATSAPP LOGIC --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // 1. Cek apakah ada notifikasi sukses biasa
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            timer: 3000,
+            showConfirmButton: false
+        });
+    @endif
+
+    // 2. LOGIKA KIRIM WHATSAPP (Khusus setelah Create Member)
+    @if(session('wa_data'))
+        @php
+            $waData = session('wa_data');
+            // Format Nomor HP: Ganti 08... jadi 628...
+            $phone = $waData['phone'];
+            if (substr($phone, 0, 1) == '0') {
+                $phone = '62' . substr($phone, 1);
+            }
+            
+            // Pesan WhatsApp (Line break pakai %0a)
+            $message = "Halo *{$waData['name']}*,%0a%0a"
+                . "Selamat datang di *Gintung Master Fitness*%0a"
+                . "Akun member Anda telah *berhasil diaktifkan* dan siap digunakan.%0a%0a"
+                . "*Detail Login Aplikasi:*%0a"
+                . "Email: {$waData['email']}%0a"
+                . "Password: *{$waData['password']}*%0a%0a"
+                . "Silakan login melalui link berikut:%0a"
+                . "https://google.com%0a%0a"
+                . "Demi keamanan akun, kami sangat menyarankan Anda untuk *segera mengganti password* setelah login.%0a%0a"
+                . "Terima kasih atas kepercayaan Anda.%0a"
+                . "*Gintung Master Fitness*";
+
+        @endphp
+
+        // Tampilkan Pop-up Konfirmasi Kirim WA
+        Swal.fire({
+            title: 'Kirimkan Akses Login',
+            text: "Member baru berhasil dibuat. Kirim detail email & password ke WhatsApp member sekarang.",
+            icon: 'question',
+            confirmButtonColor: '#25D366', // Warna Hijau WA
+            confirmButtonText: '<i class="feather-message-circle"></i> Kirim WhatsApp',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Buka Tab Baru ke API WhatsApp
+                window.open("https://wa.me/{{ $phone }}?text={{ $message }}", "_blank");
+            }
+        });
+    @endif
+</script>
 @endsection

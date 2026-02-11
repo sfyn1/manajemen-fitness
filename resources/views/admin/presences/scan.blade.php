@@ -2,7 +2,7 @@
 
 @section('content') <script src = "https://unpkg.com/html5-qrcode" type = "text/javascript" > </script> <script src = "https://cdn.jsdelivr.net/npm/sweetalert2@11" > </script>
 
-<div class="container-fluid">{{-- PAGE HEADER (BIAR TIDAK NEMBUS HEADER) --}} < div class = "page-header d-print-none mb-4" > <div class="row align-items-center">
+<div class="container-fluid">{{-- PAGE HEADER (BIAR TIDAK NEMBUS HEADER) --}} <div class = "page-header d-print-none mb-4" > <div class="row align-items-center">
     <div class="col">
         <h2 class="page-title">Scan Presensi Member</h2>
         <div class="text-muted">
@@ -10,7 +10,7 @@
         </div>
     </div>
 </div>
-</div>{{-- CONTENT --}} < div class = "row" >
+</div>{{-- CONTENT --}} <div class = "row" >
 
 <!-- SCANNER AREA -->
 

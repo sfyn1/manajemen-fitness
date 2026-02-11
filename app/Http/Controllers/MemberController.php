@@ -56,6 +56,8 @@ class MemberController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($generatedPassword), 
                 'role' => 'member',
+             
+                'must_change_password' => true,
             ]);
 
             $expiryDate = date('Y-m-d', strtotime("+$request->duration months", strtotime($request->join_date)));
@@ -98,7 +100,13 @@ class MemberController extends Controller
         // Redirect dengan Password Baru
         return redirect()->route('admin.members.index')
             ->with('success', 'Member berhasil didaftarkan!')
-            ->with('new_password', $generatedPassword);
+            // Kita kirim data penting ini ke halaman index untuk pop-up WA
+            ->with('wa_data', [
+                'name'     => $request->name,
+                'phone'    => $request->phone_number,
+                'email'    => $request->email,
+                'password' => $generatedPassword
+            ]);
     }
 
     // 4. MENAMPILKAN FORM EDIT

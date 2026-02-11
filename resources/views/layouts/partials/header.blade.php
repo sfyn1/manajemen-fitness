@@ -623,11 +623,21 @@
                             <i class="feather-settings"></i>
                             <span>Account Settings</span>
                         </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="./auth-login-minimal.html" class="dropdown-item">
+                        <form
+                            id="logout-form"
+                            action="{{ route('logout') }}"
+                            method="POST"
+                            style="display: none;">
+                            @csrf
+                        </form>
+                        <a
+                            href="javascript:void(0);"
+                            class="dropdown-item"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="feather-log-out"></i>
                             <span>Logout</span>
                         </a>
+
                     </div>
                 </div>
             </div>
