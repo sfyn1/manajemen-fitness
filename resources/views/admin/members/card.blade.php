@@ -39,7 +39,7 @@
                                 {!! QrCode::size(140)->margin(1)->generate($qrData) !!}
                             </div>
                         </div>
-                        <div class="ps-4 flex-grow-1 position-relative">
+                        <div class="ps-4 grow position-relative">
                             <h3 class="fw-bolder text-dark mb-1 text-uppercase">{{ $user->name }}</h3>
                             <span class="badge bg-primary px-3 py-2 mb-4">{{ ucfirst($user->role) }}</span>
                             <div class="info-group mb-1">

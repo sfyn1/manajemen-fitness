@@ -60,9 +60,8 @@ Route::middleware('auth')->group(function () {
         // Satpam 2: check.expiry (Wajib aktif/belum expired)
         Route::middleware(['force.change.password', 'check.expiry'])->group(function () {
             
-            Route::get('/dashboard', function () {
-                return view('member.dashboard'); 
-            })->name('dashboard');
+            Route::get('/dashboard', [App\Http\Controllers\MemberDashboardController::class, 'index'])
+             ->name('dashboard');
 
             // Nanti route booking, jadwal, dll taruh disini semua
             // Jadi kalau expired, member gak bisa booking kelas.
