@@ -56,7 +56,6 @@ class MemberController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($generatedPassword), 
                 'role' => 'member',
-             
                 'must_change_password' => true,
             ]);
 
