@@ -2,11 +2,15 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="page-header d-print-none mb-4">
-        <div class="row align-items-center">
-            <div class="col">
-                <h2 class="page-title">Data Instruktur (Coach / PT)</h2>
-                <div class="text-muted">Kelola data pelatih dan spesialisasi kelasnya.</div>
+
+    <!-- PAGE HEADER - MODERN DESIGN -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h2 class="mb-1 fw-bold">Data Instruktur Coach</h2>
+                    <p class="text-muted mb-0">Kelola data pelatih dan spesialisasi kelasnya.</p>
+                </div>
             </div>
         </div>
     </div>

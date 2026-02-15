@@ -116,4 +116,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::post('/users', [UserController::class, 'store'])->name('store');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('destroy');
     });
+
+    // MODUL BILLING (DATA MASTER)
+    Route::resource('membership-packages', \App\Http\Controllers\MembershipPackageController::class);
+    Route::resource('products', \App\Http\Controllers\ProductController::class);
+
+    // 1. Billing Membership
+    Route::get('billing', [\App\Http\Controllers\MembershipTransactionController::class, 'index'])->name('billing.index');
+    Route::get('billing/create', [\App\Http\Controllers\MembershipTransactionController::class, 'create'])->name('billing.create');
+    Route::post('billing', [\App\Http\Controllers\MembershipTransactionController::class, 'store'])->name('billing.store');
+    Route::get('billing/pdf', [\App\Http\Controllers\MembershipTransactionController::class, 'printPdf'])->name('billing.pdf');
+    // 2. Penjualan Produk
+    Route::get('product-sales', [\App\Http\Controllers\ProductTransactionController::class, 'index'])->name('product-sales.index');
+    Route::get('product-sales/create', [\App\Http\Controllers\ProductTransactionController::class, 'create'])->name('product-sales.create');
+    Route::post('product-sales', [\App\Http\Controllers\ProductTransactionController::class, 'store'])->name('product-sales.store');
+    Route::get('product-sales/pdf', [\App\Http\Controllers\ProductTransactionController::class, 'printPdf'])->name('product-sales.pdf');
 });

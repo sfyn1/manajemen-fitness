@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('transaction_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('transaction_id')->constrained()->onDelete('cascade');
+            // Polymorphic (Bisa simpan ID Paket atau ID Produk)
+            $table->unsignedBigInteger('itemable_id');
+            $table->string('itemable_type'); 
+            $table->string('name');
+            $table->decimal('price', 12, 2);
+            $table->integer('quantity');
+            $table->decimal('subtotal', 12, 2);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('transaction_items');
+    }
+};
