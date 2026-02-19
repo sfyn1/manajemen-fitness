@@ -4,17 +4,19 @@
     <!-- PAGE HEADER - MODERN DESIGN -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <h2 class="mb-1 fw-bold">Riwayat Billing Membership</h2>
-                </div>
-                <div>
-                    <a href="{{ route('admin.billing.create') }}" class="btn btn-primary shadow-sm">
-                        <i class="feather-plus-circle"></i>
-                        Transaksi Baru
-                    </a>
-                    <a href="{{ route('admin.billing.pdf') }}" class="btn btn-danger me-2" target="_blank">
-                        <i class="feather-printer"></i> Download PDF
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0 fw-bold">Data Billing & Transaksi</h2>
+                
+                <div class="d-flex gap-2">
+                    <form action="{{ route('admin.billing.index') }}" method="GET" class="d-flex align-items-center">
+                        <span class="fw-bold me-2 text-muted small">Filter Bulan:</span>
+                        <input type="month" name="month" class="form-control form-control-sm" 
+                            value="{{ $selectedMonth }}" 
+                            onchange="this.form.submit()" style="width: auto;">
+                    </form>
+
+                    <a href="{{ route('admin.billing.pdf', ['month' => $selectedMonth]) }}" class="btn btn-sm btn-danger fw-bold shadow-sm">
+                        <i class="feather-printer me-1"></i> Cetak Laporan
                     </a>
                 </div>
             </div>

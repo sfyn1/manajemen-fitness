@@ -14,14 +14,25 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class MembershipTransactionController extends Controller
 {
     // 1. RIWAYAT TRANSAKSI MEMBERSHIP
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil transaksi yang punya item berupa MembershipPackage
-        $transactions = Transaction::whereHas('items', function($q) {
-            $q->where('itemable_type', 'App\Models\MembershipPackage');
-        })->with('user', 'items')->latest()->get();
+        $selectedMonth = $request->month ?? date('Y-m');
+        $year = date('Y', strtotime($selectedMonth));
+        $month = date('m', strtotime($selectedMonth));
 
-        return view('admin.billing.index', compact('transactions'));
+        // Ambil data transaksi
+        $transactions = Transaction::with(['user']) 
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->latest()
+            ->get();
+
+        // --- TAMBAHKAN BARIS INI KEMBALI ---
+        // Menghitung total pendapatan bulan ini (Ganti 'total_amount' dengan nama kolom harga/total di tabel transactions Anda jika berbeda)
+        $totalIncome = $transactions->sum('total_amount'); 
+
+        // Jangan lupa tambahkan 'totalIncome' ke dalam compact
+        return view('admin.billing.index', compact('transactions', 'selectedMonth', 'totalIncome'));
     }
 
     // 2. FORM PERPANJANG MEMBERSHIP
@@ -95,19 +106,25 @@ class MembershipTransactionController extends Controller
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    public function printPdf()
+
+    public function printPdf(Request $request)
     {
-        // Ambil data transaksi khusus membership
-        $transactions = Transaction::whereHas('items', function($q) {
-            $q->where('itemable_type', 'App\Models\MembershipPackage');
-        })->with('user', 'items')->latest()->get();
+        $selectedMonth = $request->month ?? date('Y-m');
+        $year = date('Y', strtotime($selectedMonth));
+        $month = date('m', strtotime($selectedMonth));
 
-        $totalIncome = $transactions->sum('grand_total');
+        // Ambil data transaksi
+        $transactions = Transaction::with(['user']) 
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->latest()
+            ->get();
 
-        // Load View PDF
-        $pdf = Pdf::loadView('admin.billing.pdf', compact('transactions', 'totalIncome'));
-        
-        // Download atau Stream (Tampil di browser)
-        return $pdf->stream('Laporan-Membership-' . date('Y-m-d') . '.pdf');
+        // --- TAMBAHKAN BARIS INI KEMBALI ---
+        $totalIncome = $transactions->sum('total_amount');
+
+        // Jangan lupa tambahkan 'totalIncome' ke dalam compact
+        $pdf = Pdf::loadView('admin.billing.pdf', compact('transactions', 'selectedMonth', 'totalIncome'));
+        return $pdf->stream('Laporan-Billing-'.$selectedMonth.'.pdf');
     }
 }
