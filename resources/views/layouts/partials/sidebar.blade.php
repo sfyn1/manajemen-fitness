@@ -36,7 +36,7 @@
                 </li>
 
                 <li class="nxl-item nxl-caption">
-                    <label>Modul Skripsi</label>
+                    <label>Modul</label>
                 </li>
 
                 <li class="nxl-item nxl-hasmenu">
@@ -84,7 +84,7 @@
                         <span class="nxl-micon">
                             <i class="feather-calendar"></i>
                         </span>
-                        <span class="nxl-mtext">Manajemen Jadwal</span>
+                        <span class="nxl-mtext">Pelatih</span>
                         <span class="nxl-arrow">
                             <i class="feather-chevron-right"></i>
                         </span>
@@ -98,6 +98,9 @@
                         </li>
                         <li class="nxl-item">
                             <a class="nxl-link" href="{{ route('admin.schedules.index') }}">Atur Jadwal</a>
+                        </li>
+                        <li class="nxl-item">
+                            <a class="nxl-link" href="{{ route('admin.presences.coach') }}">Approval</a>
                         </li>
                     </ul>
                 </li>
@@ -113,12 +116,12 @@
                     </a>
                     <ul class="nxl-submenu">
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.billing.index') }}">Billing Membership</a>
+                            <a class="nxl-link" href="{{ route('admin.membership-packages.index') }}">Paket & Harga Membership</a>
                         </li>
                     </ul>
                     <ul class="nxl-submenu">
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.membership-packages.index') }}">Paket & Harga Membership</a>
+                            <a class="nxl-link" href="{{ route('admin.billing.index') }}">Perpanjang Membership</a>
                         </li>
                     </ul>
                 </li>
@@ -135,16 +138,31 @@
                     </a>
                     <ul class="nxl-submenu">
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.product-sales.index') }}">Penjualan Produk</a>
+                            <a class="nxl-link" href="{{ route('admin.products.index') }}">Produk</a>
                         </li>
                     </ul>
                     <ul class="nxl-submenu">
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.products.index') }}">Produk</a>
+                            <a class="nxl-link" href="{{ route('admin.product-sales.index') }}">Penjualan Produk</a>
                         </li>
                     </ul>
                 </li>
-
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon">
+                            <i class="feather-dollar-sign"></i>
+                        </span>
+                        <span class="nxl-mtext">Penggajian</span>
+                        <span class="nxl-arrow">
+                            <i class="feather-chevron-right"></i>
+                        </span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item">
+                            <a class="nxl-link" href="{{ route('admin.payouts.index') }}">Gaji Coach</a>
+                        </li>
+                    </ul>
+                </li>
                 
 
                 <li class="nxl-item nxl-caption">

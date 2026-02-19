@@ -61,10 +61,6 @@
 
             <div class="text-center mt-5 d-print-none">
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="{{ route('admin.members.index') }}" class="btn btn-light border px-4 py-2">
-                        <i class="feather-arrow-left me-2"></i> Kembali
-                    </a>
-
                     <button type="button" id="btn-download-pdf" class="btn btn-danger px-4 py-2">
                         <i class="feather-file-text me-2"></i> Download PDF
                     </button>
@@ -72,6 +68,10 @@
                     <button type="button" id="btn-download-jpg" class="btn btn-success px-4 py-2">
                         <i class="feather-image me-2"></i> Download JPG
                     </button>
+
+                    <a href="{{ route('admin.members.index') }}" class="btn btn-light border px-4 py-2">
+                        <i class="feather-arrow-left me-2"></i> Kembali
+                    </a>
                 </div>
             </div>
 

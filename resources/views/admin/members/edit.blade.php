@@ -2,10 +2,17 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
+    <!-- MODERN PAGE HEADER -->
+    <div class="row mb-4">
         <div class="col-12">
-            <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0">Edit Member</h4>
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h2 class="mb-1 fw-bold">Edit Member</h2>
+                    <p class="text-muted mb-0">Lengkapi form di bawah untuk mengedit member</p>
+                </div>
+                <a href="{{ route('admin.members.index') }}" class="btn btn-light">
+                    <i class="feather-arrow-left me-2"></i> Kembali
+                </a>
             </div>
         </div>
     </div>

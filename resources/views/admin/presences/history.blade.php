@@ -2,15 +2,17 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="page-header d-print-none">
-        <div class="row align-items-center">
-            <div class="col">
-                <h2 class="page-title">Statistik Kehadiran Member</h2>
-                <div class="text-muted mt-1">Pantau intensitas latihan member Anda.</div>
+    <!-- PAGE HEADER - MODERN DESIGN -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h2 class="mb-1 fw-bold">Statistik Kehadiran Member</h2>
+                </div>
             </div>
         </div>
     </div>
-
+    
     <div class="card mt-3">
         <div class="card-body">
             <div class="table-responsive">

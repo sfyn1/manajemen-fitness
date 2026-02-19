@@ -23,21 +23,32 @@ class UserController extends Controller
     // 2. SIMPAN USER BARU
     public function store(Request $request)
     {
+        // 1. VALIDASI DATA
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'role' => 'required|in:admin,owner,coach', 
-            'phone_number' => 'required|numeric',
+            
+            // TAMBAHKAN VALIDASI UNIK UNTUK EMAIL
+            'email' => 'required|string|email|max:255|unique:users,email', 
+            
+            // VALIDASI UNIK UNTUK NO HP (Yang tadi)
+            'phone_number' => 'required|numeric|unique:users,phone_number', 
+            
+            'role' => 'required|in:admin,owner,coach,member',
+            'password' => 'required|string|min:6',
+        ], [
+            // PESAN ERROR BAHASA INDONESIA (SUPAYA TIDAK BINGUNG)
+            'email.unique' => 'Email ini sudah digunakan oleh akun lain. Mohon gunakan email berbeda.',
+            'phone_number.unique' => 'Nomor WhatsApp ini sudah terdaftar. Gunakan nomor lain.',
         ]);
 
-        User::create([
+        // 2. SIMPAN DATA
+        \App\Models\User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
             'phone_number' => $request->phone_number,
-            'must_change_password' => false, 
+            'role' => $request->role,
+            'password' => bcrypt($request->password),
+            // ...
         ]);
 
         return redirect()->back()->with('success', 'Akun berhasil dibuat!');

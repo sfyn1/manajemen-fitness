@@ -9,7 +9,6 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <h2 class="mb-1 fw-bold">Data Instruktur Coach</h2>
-                    <p class="text-muted mb-0">Kelola data pelatih dan spesialisasi kelasnya.</p>
                 </div>
             </div>
         </div>
@@ -72,44 +71,65 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="card bg-light border-0 shadow-none">
-                <div class="card-header bg-transparent border-0">
-                    <h4 class="card-title"><i class="feather-plus-circle me-2"></i>Tambah Pelatih Baru</h4>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.coaches.store') }}" method="POST">
-                        @csrf
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
-                            <input type="text" name="name" class="form-control" placeholder="Cth: Ade Rai" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Spesialis Kelas <span class="text-danger">*</span></label>
-                            <select name="class_type_id" class="form-select" required>
-                                <option value="">-- Pilih Kelas --</option>
-                                @foreach($classTypes as $class)
-                                    <option value="{{ $class->id }}">{{ $class->name }}</option>
-                                @endforeach
-                            </select>
-                            <div class="form-text">
-                                Kelas tidak ada? <a href="{{ route('admin.classtypes.index') }}">Buat Jenis Kelas dulu.</a>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Nomor WhatsApp</label>
-                            <input type="number" name="phone_number" class="form-control" placeholder="0812...">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="feather-save me-2"></i> Simpan Data
-                        </button>
-                    </form>
-                </div>
-            </div>
+    <div class="card bg-light border-0 shadow-none">
+        <div class="card-header bg-transparent border-0">
+            <h4 class="card-title">
+                <i class="feather-plus-circle me-2"></i>Tambah Pelatih Baru
+            </h4>
         </div>
+
+        <div class="card-body">
+            <form action="{{ route('admin.coaches.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    
+    <div class="mb-3">
+        <label class="form-label fw-bold">Pilih Akun Coach <span class="text-danger">*</span></label>
+        <select name="user_id" class="form-select" required>
+            <option value="">-- Pilih Akun yang sudah dibuat --</option>
+            
+            {{-- Logic: Ambil User role 'coach' yg belum ada di tabel coaches --}}
+            @php
+                $availableUsers = \App\Models\User::where('role', 'coach')->doesntHave('coachProfile')->get();
+            @endphp
+
+            @foreach($availableUsers as $u)
+                {{-- Tampilkan Nama & No HP di opsi agar Admin yakin --}}
+                <option value="{{ $u->id }}">
+                    {{ $u->name }} ({{ $u->phone_number ?? 'No HP Kosong' }})
+                </option>
+            @endforeach
+        </select>
+        
+        @if($availableUsers->isEmpty())
+            <div class="alert alert-warning mt-2 small">
+                <i class="feather-alert-triangle"></i> Tidak ada akun coach tersedia. 
+                <a href="{{ route('admin.users.index') }}" class="fw-bold text-dark">Buat akun dulu disini.</a>
+            </div>
+        @else
+            <small class="text-muted d-block mt-1">
+                <i class="feather-info"></i> Nama & No. HP akan diambil otomatis dari akun yang dipilih.
+            </small>
+        @endif
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold">Spesialis Kelas <span class="text-danger">*</span></label>
+        <select name="class_type_id" class="form-select" required>
+            <option value="">-- Pilih Kelas --</option>
+            @foreach($classTypes as $type)
+                <option value="{{ $type->id }}">{{ $type->name }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 fw-bold">
+        <i class="feather-save me-1"></i> SIMPAN & HUBUNGKAN
+    </button>
+</form>
+        </div>
+    </div>
+</div>
+
     </div>
 </div>
 

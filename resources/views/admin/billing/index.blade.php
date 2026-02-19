@@ -1,16 +1,23 @@
 @extends('layouts.admin')
 @section('content')
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold">Riwayat Billing Membership</h2>
-        <div>
-            <a href="{{ route('admin.billing.pdf') }}" class="btn btn-danger me-2" target="_blank">
-                <i class="feather-printer"></i> Download PDF
-            </a>
-            
-            <a href="{{ route('admin.billing.create') }}" class="btn btn-primary">
-                <i class="feather-plus-circle"></i> Transaksi Baru
-            </a>
+    <!-- PAGE HEADER - MODERN DESIGN -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h2 class="mb-1 fw-bold">Riwayat Billing Membership</h2>
+                </div>
+                <div>
+                    <a href="{{ route('admin.billing.create') }}" class="btn btn-primary shadow-sm">
+                        <i class="feather-plus-circle"></i>
+                        Transaksi Baru
+                    </a>
+                    <a href="{{ route('admin.billing.pdf') }}" class="btn btn-danger me-2" target="_blank">
+                        <i class="feather-printer"></i> Download PDF
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 

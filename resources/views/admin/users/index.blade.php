@@ -98,13 +98,32 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Email Login <span class="text-danger">*</span></label>
-                            <input type="email" name="email" class="form-control" required placeholder="email@gym.com">
+                            <label class="form-label fw-bold">Email Login <span class="text-danger">*</span></label>
+                            
+                            {{-- Tambahkan class is-invalid jika ada error --}}
+                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
+                                value="{{ old('email') }}" placeholder="email@gym.com" required>
+                            
+                            {{-- MENAMPILKAN PESAN ERROR DI BAWAH INPUT --}}
+                            @error('email')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Nomor WhatsApp <span class="text-danger">*</span></label>
-                            <input type="number" name="phone_number" class="form-control" required placeholder="0812...">
+                            <label class="form-label fw-bold">Nomor WhatsApp <span class="text-danger">*</span></label>
+                            <input type="number" name="phone_number" class="form-control @error('phone_number') is-invalid @enderror" 
+                                value="{{ old('phone_number') }}" placeholder="0812...">
+                            
+                            {{-- MENAMPILKAN PESAN ERROR --}}
+                            @error('phone_number')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                            
                             <small class="text-muted">Untuk keperluan verifikasi OTP.</small>
                         </div>
 

@@ -22,13 +22,28 @@ class CoachController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'class_type_id' => 'required|exists:class_types,id', // Validasi harus pilih kelas
+            'user_id' => 'required|exists:users,id|unique:coaches,user_id',
+            'class_type_id' => 'required',
+            // 'phone_number' tidak perlu divalidasi dari request karena diambil dari DB
         ]);
 
-        Coach::create($request->all());
+        // 1. Cari Data User berdasarkan ID yang dipilih
+        $user = \App\Models\User::findOrFail($request->user_id);
 
-        return redirect()->back()->with('success', 'Data Coach berhasil ditambahkan!');
+        // 2. Simpan ke tabel Coaches (Nama & No HP diambil otomatis)
+        \App\Models\Coach::create([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            
+            // AMBIL NO HP DARI USER
+            // Jika user tidak punya no hp, isi '-' atau biarkan null (tergantung struktur DB Anda)
+            'phone_number' => $user->phone_number ?? '-', 
+            
+            'class_type_id' => $request->class_type_id,
+        ]);
+
+        return redirect()->route('admin.coaches.index')
+            ->with('success', 'Data Pelatih berhasil ditambahkan! Nama & No HP disinkronkan dari Akun.');
     }
 
     public function destroy($id)

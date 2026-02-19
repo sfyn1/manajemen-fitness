@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User; // <--- PASTIKAN ADA INI
-use Illuminate\Support\Facades\Hash; // <--- PASTIKAN ADA INI
+use App\Models\User; 
+use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\DB; 
+    use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -64,10 +66,20 @@ class AuthController extends Controller
     // 3. Proses Logout
     public function logout(Request $request)
     {
+        // 1. Ambil ID Session saat ini sebelum dihapus
+        $sessionId = Session::getId();
+
+        // 2. Proses Logout standar Laravel
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+
+        // 3. HAPUS PAKSA DARI DATABASE (Fitur Tambahan)
+        // Ini akan menghapus baris di tabel sessions sesuai ID tadi
+        DB::table('sessions')->where('id', $sessionId)->delete();
+
+        // 4. Redirect ke halaman login
+        return redirect()->route('login');
     }
 
     // 4. PINTU MASUK PINTAR (DASHBOARD REDIRECT)

@@ -9,23 +9,28 @@ class Schedule extends Model
 {
     use HasFactory;
 
+    // KITA KEMBALI KE HARI, BUKAN TANGGAL
     protected $fillable = [
-        'class_type_id',
         'coach_id',
-        'day',
+        'class_type_id',
+        'day',          // Senin, Selasa, dll
         'start_time',
         'end_time'
     ];
 
-    // Relasi ke Jenis Kelas
+    public function coach()
+    {
+        return $this->belongsTo(Coach::class);
+    }
+
     public function classType()
     {
         return $this->belongsTo(ClassType::class);
     }
 
-    // Relasi ke Pelatih
-    public function coach()
+    // Relasi ke Booking (Siapa aja yg booking jadwal ini)
+    public function bookings()
     {
-        return $this->belongsTo(Coach::class);
+        return $this->hasMany(Booking::class);
     }
 }

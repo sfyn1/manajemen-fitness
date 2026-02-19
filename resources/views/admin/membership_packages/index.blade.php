@@ -8,10 +8,9 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <h2 class="mb-1 fw-bold">Paket Membership</h2>
-                    <p class="text-muted mb-0">Kelola paket membership</p>
                 </div>
                 <div>
-                    <a href="{{ route('admin.members.create') }}" class="btn btn-primary shadow-sm">
+                    <a href="{{ route('admin.membership-packages.create') }}" class="btn btn-primary shadow-sm">
                         <i class="feather-user-plus me-2"></i>
                         Tambah Paket Baru
                     </a>

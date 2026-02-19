@@ -7,12 +7,11 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <h2 class="mb-1 fw-bold">Daftar Member</h2>
-                    <p class="text-muted mb-0">Kelola data member dan keanggotaan gym</p>
                 </div>
                 <div>
                     <a href="{{ route('admin.members.create') }}" class="btn btn-primary shadow-sm">
                         <i class="feather-user-plus me-2"></i>
-                        Tambah Member Baru
+                        Tambah Member
                     </a>
                 </div>
             </div>
@@ -30,7 +29,7 @@
                     <div class="me-3">
                         <i class="feather-check-circle fs-3 text-success"></i>
                     </div>
-                    <div class="flex-grow-1">
+                    <div class="grow">
                         <h5 class="alert-heading mb-2">Berhasil!</h5>
                         <p class="mb-0">{{ session('success') }}</p>
 

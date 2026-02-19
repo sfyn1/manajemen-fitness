@@ -3,49 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\Schedule;
-use App\Models\ClassType;
 use App\Models\Coach;
+use App\Models\ClassType;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
-    // TAMPILKAN JADWAL
     public function index()
     {
-        // Urutkan jadwal agar rapi (Senin -> Minggu)
-        // Kita gunakan trik FIELD() mysql untuk mengurutkan hari
-        $schedules = Schedule::with(['classType', 'coach'])
-            ->orderByRaw("FIELD(day, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu')")
-            ->orderBy('start_time')
-            ->get();
-
-        // Ambil Data untuk Form Tambah (Dropdown)
-        $classTypes = ClassType::all();
-        $coaches = Coach::all();
+        // Ambil semua jadwal (biarkan seperti codingan lama Anda)
+        $schedules = Schedule::with(['classType', 'coach'])->orderBy('day')->orderBy('start_time')->get();
+        
+        // DATA UNTUK FORM TAMBAH
+        $classTypes = \App\Models\ClassType::all();
+        
+        // PENTING: Kita kirim semua coach, nanti JavaScript yang akan memfilternya
+        $coaches = \App\Models\Coach::all(); 
 
         return view('admin.schedules.index', compact('schedules', 'classTypes', 'coaches'));
     }
 
-    // SIMPAN JADWAL BARU
     public function store(Request $request)
     {
         $request->validate([
-            'class_type_id' => 'required',
-            'coach_id' => 'required',
-            'day' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required|after:start_time',
+            'day'           => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'start_time'    => 'required',
+            'end_time'      => 'required',
+            'class_type_id' => 'required|exists:class_types,id',
+            'coach_id'      => 'required|exists:coaches,id',
         ]);
 
-        Schedule::create($request->all());
+        Schedule::create([
+            'day'           => $request->day,
+            'start_time'    => $request->start_time,
+            'end_time'      => $request->end_time,
+            'class_type_id' => $request->class_type_id,
+            'coach_id'      => $request->coach_id,
+        ]);
 
-        return redirect()->back()->with('success', 'Jadwal berhasil ditambahkan!');
+        return redirect()->back()->with('success', 'Jadwal rutin berhasil ditambahkan.');
     }
 
-    // HAPUS JADWAL
     public function destroy($id)
     {
-        Schedule::find($id)->delete();
-        return redirect()->back()->with('success', 'Jadwal dihapus.');
+        $schedule = Schedule::findOrFail($id);
+        $schedule->delete();
+
+        return redirect()->back()->with('success', 'Jadwal berhasil dihapus.');
     }
 }

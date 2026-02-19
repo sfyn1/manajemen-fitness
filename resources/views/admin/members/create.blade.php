@@ -207,17 +207,19 @@
                         </div>
 
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">
-                                    Durasi Paket <span class="text-danger">*</span>
-                                </label>
-                                <select name="duration" class="form-select" required>
-                                    <option value="">Pilih Durasi</option>
-                                    <option value="1">1 Bulan</option>
-                                    <option value="3">3 Bulan</option>
-                                    <option value="6">6 Bulan</option>
-                                    <option value="12">1 Tahun</option>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Pilih Paket Membership <span class="text-danger">*</span></label>
+                                <select name="package_id" class="form-select" required>
+                                    <option value="">-- Pilih Paket --</option>
+                                    
+                                    @foreach($packages as $pkg)
+                                        {{-- KODE BARU: Pakai 'duration_in_days' --}}
+                                        <option value="{{ $pkg->id }}">
+                                            {{ $pkg->name }} - {{ $pkg->duration_in_days }} Hari (Rp {{ number_format($pkg->price, 0, ',', '.') }})
+                                        </option>
+                                    @endforeach
                                 </select>
+                                <small class="text-muted">Durasi & Harga otomatis mengikuti paket yang dipilih.</small>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">

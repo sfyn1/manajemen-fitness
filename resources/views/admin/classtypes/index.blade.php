@@ -9,7 +9,6 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <h2 class="mb-1 fw-bold">Jenis Kelas Olahraga</h2>
-                    <p class="text-muted mb-0">Master data kelas (Zumba, Yoga, dll).</p>
                 </div>
             </div>
         </div>

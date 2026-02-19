@@ -41,31 +41,40 @@ Route::middleware('auth')->group(function () {
     // Dashboard Owner (Bebas)
     Route::get('/owner/dashboard', function () { return "<h1>Halo Owner!</h1>"; })->name('owner.dashboard');
     
-    // Dashboard PT/Coach (Bebas)
+    // Dashboard PT/Coach (Bebas) - Redirect lama
     Route::get('/pt/dashboard', function () { return "<h1>Halo PT!</h1>"; })->name('pt.dashboard');
-    Route::get('/coach/dashboard', function () { return "<h1>Halo Coach!</h1>"; })->name('coach.dashboard');
+    
+    // ==========================================
+    // KHUSUS COACH
+    // ==========================================
+    Route::prefix('coach')->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\CoachDashboardController::class, 'index'])->name('coach.dashboard');
+        Route::post('/presence', [\App\Http\Controllers\CoachDashboardController::class, 'storePresence'])->name('coach.presence.store');
+    });
 
-    // --- KHUSUS MEMBER ---
-    Route::prefix('member')->name('member.')->group(function () {
-        
+    // ==========================================
+    // KHUSUS MEMBER
+    // ==========================================
+    Route::prefix('member')->group(function () {
         // 1. Route Ganti Password (BEBAS AKSES)
-        Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('change-password.form');
-        Route::post('/change-password', [AuthController::class, 'updatePassword'])->name('change-password.update');
+        Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('member.change-password.form');
+        Route::post('/change-password', [AuthController::class, 'updatePassword'])->name('member.change-password.update');
 
-        // 2. Route Halaman Expired (BEBAS AKSES - Supaya tidak redirect loop)
-        Route::get('/expired', [AuthController::class, 'showExpiredPage'])->name('expired');
+        // 2. Route Halaman Expired (BEBAS AKSES)
+        Route::get('/expired', [AuthController::class, 'showExpiredPage'])->name('member.expired');
 
-        // 3. Route Dashboard & Fitur Inti (DILINDUNGI 2 SATPAM)
-        // Satpam 1: force.change.password (Wajib ganti pass)
-        // Satpam 2: check.expiry (Wajib aktif/belum expired)
+        // 3. Route Dashboard & Fitur Inti (DILINDUNGI)
         Route::middleware(['force.change.password', 'check.expiry'])->group(function () {
             
-            Route::get('/dashboard', [App\Http\Controllers\MemberDashboardController::class, 'index'])
-             ->name('dashboard');
-
-            // Nanti route booking, jadwal, dll taruh disini semua
-            // Jadi kalau expired, member gak bisa booking kelas.
-        });
+            // Dashboard
+            Route::get('/dashboard', [App\Http\Controllers\MemberDashboardController::class, 'index'])->name('member.dashboard');
+    
+            // MODUL BOOKING KELAS
+            // Nama route: booking.index, booking.store, booking.history
+            Route::get('/booking', [\App\Http\Controllers\MemberBookingController::class, 'index'])->name('booking.index');
+            Route::post('/booking', [\App\Http\Controllers\MemberBookingController::class, 'store'])->name('booking.store');
+            Route::get('/my-classes', [\App\Http\Controllers\MemberBookingController::class, 'history'])->name('booking.history');
+            Route::delete('/booking/{id}', [\App\Http\Controllers\MemberBookingController::class, 'destroy'])->name('booking.cancel');        });
     });
 });
 
@@ -85,12 +94,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::post('/members/print-pdf-image', [MemberController::class, 'printPdfImage'])->name('print-pdf-image');
     });
 
-    // MODUL PRESENSI
+    // MODUL PRESENSI MEMBER
     Route::name('presences.')->group(function () {
         Route::get('/scan', [PresenceController::class, 'index'])->name('scan');
         Route::post('/scan', [PresenceController::class, 'store'])->name('store');
         Route::get('/presence-history', [PresenceController::class, 'history'])->name('history');
         Route::get('/presences/report', [PresenceController::class, 'report'])->name('report');
+        Route::get('/coach-approval', [\App\Http\Controllers\CoachPresenceController::class, 'index'])->name('coach'); // admin.presences.coach
+        Route::post('/coach-approval/{id}/approve', [\App\Http\Controllers\CoachPresenceController::class, 'approve'])->name('approve'); // admin.presences.approve
     });
 
     // MODUL JADWAL
@@ -120,15 +131,21 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // MODUL BILLING (DATA MASTER)
     Route::resource('membership-packages', \App\Http\Controllers\MembershipPackageController::class);
     Route::resource('products', \App\Http\Controllers\ProductController::class);
-
+    
     // 1. Billing Membership
     Route::get('billing', [\App\Http\Controllers\MembershipTransactionController::class, 'index'])->name('billing.index');
     Route::get('billing/create', [\App\Http\Controllers\MembershipTransactionController::class, 'create'])->name('billing.create');
     Route::post('billing', [\App\Http\Controllers\MembershipTransactionController::class, 'store'])->name('billing.store');
     Route::get('billing/pdf', [\App\Http\Controllers\MembershipTransactionController::class, 'printPdf'])->name('billing.pdf');
+    
     // 2. Penjualan Produk
     Route::get('product-sales', [\App\Http\Controllers\ProductTransactionController::class, 'index'])->name('product-sales.index');
     Route::get('product-sales/create', [\App\Http\Controllers\ProductTransactionController::class, 'create'])->name('product-sales.create');
     Route::post('product-sales', [\App\Http\Controllers\ProductTransactionController::class, 'store'])->name('product-sales.store');
     Route::get('product-sales/pdf', [\App\Http\Controllers\ProductTransactionController::class, 'printPdf'])->name('product-sales.pdf');
+
+    // MODUL PENGGAJIAN (PAYROLL)
+    Route::get('payouts/calculate', [\App\Http\Controllers\CoachPayoutController::class, 'calculate'])->name('payouts.calculate');
+    Route::get('payouts/{id}/print', [\App\Http\Controllers\CoachPayoutController::class, 'print'])->name('payouts.print');
+    Route::resource('payouts', \App\Http\Controllers\CoachPayoutController::class);
 });

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Member;
+// Pastikan Import Model Paket Membership ada
+use App\Models\MembershipPackage; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage; // Tambahan untuk upload file
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -20,35 +22,46 @@ class MemberController extends Controller
         return view('admin.members.index', compact('members'));
     }
 
-    // 2. FITUR MENAMPILKAN FORM TAMBAH MEMBER
+    // 2. FITUR MENAMPILKAN FORM TAMBAH MEMBER (UPDATED: Kirim Data Paket)
     public function create()
     {
-        return view('admin.members.create');
+        // Ambil data paket untuk dropdown
+        $packages = MembershipPackage::all();
+        
+        return view('admin.members.create', compact('packages'));
     }
 
-    // 3. FITUR MENYIMPAN DATA MEMBER BARU (UPDATED: Upload KTP & Pelajar)
+    // 3. FITUR MENYIMPAN DATA MEMBER BARU (UPDATED: Logika Paket Membership)
     public function store(Request $request)
     {
-        // Validasi Input
+        // 1. Validasi Input
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            // Password tidak divalidasi karena digenerate otomatis
             'phone_number' => 'required',
             'gender' => 'required',
-            'duration' => 'required|integer',
             'join_date' => 'required|date',
+            'package_id' => 'required|exists:membership_packages,id', // Pastikan ID paket ada
             
-            // --- TAMBAHAN VALIDASI FOTO ---
-            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Wajib
-            'ktp_image' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Wajib
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'ktp_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'student_card_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // 1. GENERATE PASSWORD ACAK (Sistem Lama)
+        // 2. GENERATE PASSWORD
         $generatedPassword = Str::random(8); 
 
-        DB::transaction(function () use ($request, $generatedPassword) {
+        // 3. AMBIL DATA PAKET (PERBAIKAN DISINI)
+        $package = MembershipPackage::findOrFail($request->package_id);
+        
+        // Gunakan nama kolom yang BENAR: duration_in_days
+        $durationDays = (int) $package->duration_in_days; 
+
+        // 4. HITUNG TANGGAL KADALUARSA
+        // Rumus: Tanggal Gabung + Durasi Paket
+        $expiryDate = date('Y-m-d', strtotime("+$durationDays days", strtotime($request->join_date)));
+
+        DB::transaction(function () use ($request, $generatedPassword, $expiryDate, $package) {
             
             // Simpan User
             $user = User::create([
@@ -59,24 +72,12 @@ class MemberController extends Controller
                 'must_change_password' => true,
             ]);
 
-            $expiryDate = date('Y-m-d', strtotime("+$request->duration months", strtotime($request->join_date)));
-
-            // --- PROSES UPLOAD FOTO ---
-            // 1. Upload Foto Wajah
-            $photoPath = null;
-            if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('members/faces', 'public');
-            }
-
-            $ktpPath = null;
-            if ($request->hasFile('ktp_image')) {
-                // Simpan ke storage/app/public/members/ktp
-                $ktpPath = $request->file('ktp_image')->store('members/ktp', 'public');
-            }
-
+            // Upload Foto
+            $photoPath = $request->file('photo')->store('members/faces', 'public');
+            $ktpPath = $request->file('ktp_image')->store('members/ktp', 'public');
+            
             $studentCardPath = null;
             if ($request->hasFile('student_card_image')) {
-                // Simpan ke storage/app/public/members/student
                 $studentCardPath = $request->file('student_card_image')->store('members/student', 'public');
             }
 
@@ -87,19 +88,16 @@ class MemberController extends Controller
                 'address' => $request->address,
                 'gender' => $request->gender,
                 'join_date' => $request->join_date,
-                'expiry_date' => $expiryDate, 
+                'expiry_date' => $expiryDate, // Tanggal yang sudah benar
                 'status' => 'active',
-                // Masukkan path foto ke database
                 'photo' => $photoPath,
                 'ktp_image' => $ktpPath,
                 'student_card_image' => $studentCardPath,
             ]);
         });
 
-        // Redirect dengan Password Baru
         return redirect()->route('admin.members.index')
-            ->with('success', 'Member berhasil didaftarkan!')
-            // Kita kirim data penting ini ke halaman index untuk pop-up WA
+            ->with('success', 'Member berhasil didaftarkan dengan Paket ' . $package->name . '!')
             ->with('wa_data', [
                 'name'     => $request->name,
                 'phone'    => $request->phone_number,
@@ -148,7 +146,6 @@ class MemberController extends Controller
     {
         $user = User::with('member')->findOrFail($id);
 
-        // Hapus file foto dari storage jika ada (Biar server tidak penuh)
         if ($user->member->ktp_image) {
             Storage::disk('public')->delete($user->member->ktp_image);
         }
@@ -182,7 +179,7 @@ class MemberController extends Controller
         return $pdf->download('Kartu-Member-'.$memberName.'.pdf');
     }
 
-    // 9. FITUR LIHAT DETAIL MEMBER (BIODATA LENGKAP)
+    // 9. FITUR LIHAT DETAIL MEMBER
     public function show($id)
     {
         $user = User::with('member')->findOrFail($id);

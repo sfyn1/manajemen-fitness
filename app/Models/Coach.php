@@ -10,7 +10,18 @@ class Coach extends Model
     use HasFactory;
 
     // 'specialization' diganti 'class_type_id'
-    protected $fillable = ['name', 'class_type_id', 'phone_number', 'photo'];
+    protected $fillable = [
+        'user_id',
+        'name',
+        'phone_number',
+        'photo',
+        'class_type_id', 
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Relasi: Pelatih ini "memiliki" satu jenis kelas spesialisasi
     public function classType()

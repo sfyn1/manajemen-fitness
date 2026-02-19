@@ -59,6 +59,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(Member::class);
     }
+
+    // RELASI: Satu User (Coach) memiliki satu data detail Coach
+    public function coachProfile()
+    {
+        return $this->hasOne(Coach::class, 'user_id');
+    }
     
     // Helper function untuk cek role dengan mudah nanti
     public function hasRole($role)

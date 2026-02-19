@@ -4,16 +4,18 @@
 <div class="container-fluid">
     
     <div class="d-print-none">
-        <div class="page-header mb-4">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h2 class="page-title">Laporan Kunjungan</h2>
-                    <div class="text-muted">Rekap data kedatangan member Gintung Fitness.</div>
-                </div>
-                <div class="col-auto ms-auto d-print-none">
-                    <button type="button" class="btn btn-primary" onclick="window.print();">
-                        <i class="feather-printer me-2"></i> Cetak / Simpan PDF
-                    </button>
+        <!-- PAGE HEADER - MODERN DESIGN -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h2 class="mb-1 fw-bold">Laporan Kunjungan</h2>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary" onclick="window.print();">
+                        <i class="feather-printer me-2"></i> Cetak PDF
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

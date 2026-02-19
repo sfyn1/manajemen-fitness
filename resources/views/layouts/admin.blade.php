@@ -15,9 +15,26 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('template/assets/vendors/css/vendors.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('template/assets/vendors/css/daterangepicker.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('template/assets/css/theme.min.css') }}" />
+    
+    <style>
+    .nxl-container {
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nxl-content {
+        flex: 1 0 auto;
+    }
+
+    .footer {
+        flex-shrink: 0;
+    }
+    </style>
+
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     
     @include('layouts.partials.sidebar')
 
