@@ -15,7 +15,7 @@
     <div class="card border-0 shadow-sm">
         <div class="card-body p-0">
             <table class="table table-hover mb-0 align-middle">
-                <thead class="bg-light">
+                <thead class="text-center">
                     <tr>
                         <th class="px-4">No. Slip</th>
                         <th>Coach</th>

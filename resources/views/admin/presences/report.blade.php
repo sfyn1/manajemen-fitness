@@ -58,7 +58,7 @@
 
             <div class="table-responsive">
                 <table class="table table-bordered table-striped align-middle">
-                    <thead class="bg-light text-center">
+                    <thead class="text-center">
                         <tr>
                             <th width="5%">No</th>
                             <th width="20%">Waktu Check-in</th>

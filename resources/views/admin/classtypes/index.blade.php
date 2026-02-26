@@ -22,7 +22,7 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-vcenter card-table table-striped">
-                        <thead>
+                        <thead class="text-center">
                             <tr>
                                 <th>Nama Kelas</th>
                                 <th>Durasi</th>
@@ -32,7 +32,7 @@
                         </thead>
                         <tbody>
                             @forelse($classTypes as $class)
-                            <tr>
+                            <tr id="classtype-{{ $class->id }}">
                                 <td>
                                     <div class="fw-bold fs-15">{{ $class->name }}</div>
                                     <div class="text-muted fs-12 text-truncate" style="max-width: 250px;">

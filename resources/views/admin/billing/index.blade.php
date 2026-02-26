@@ -30,7 +30,7 @@
     <div class="card border-0 shadow-sm">
         <div class="card-body p-0">
             <table class="table table-hover mb-0">
-                <thead class="bg-light">
+                <thead class="text-center">
                     <tr>
                         <th class="px-4">Invoice</th>
                         <th>Member</th>

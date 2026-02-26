@@ -15,7 +15,7 @@
     <div class="card border-0 shadow-sm">
         <div class="card-body p-0">
             <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
+                <thead class="text-center">
                     <tr>
                         <th class="px-4">Gambar</th>
                         <th>Nama Produk</th>
@@ -27,7 +27,7 @@
                 </thead>
                 <tbody>
                     @forelse($products as $product)
-                    <tr>
+                    <tr id="product-{{ $product->id }}">
                         <td class="px-4">
                             @if($product->image)
                                 <img src="{{ asset('storage/' . $product->image) }}" width="50" height="50" class="rounded object-fit-cover">

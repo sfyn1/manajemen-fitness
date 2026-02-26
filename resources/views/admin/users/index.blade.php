@@ -29,11 +29,11 @@
                         </thead>
                         <tbody>
                             @forelse($users as $user)
-                            <tr>
+                            <tr id="user-{{ $user->id }}">
                                 <td class="fw-bold">{{ $user->name }}</td>
                                 <td>
                                     @if($user->role == 'admin')
-                                        <span class="badge bg-purple text-white">ADMIN</span>
+                                        <span class="badge bg-primary text-white">ADMIN</span>
                                     @elseif($user->role == 'owner')
                                         <span class="badge bg-warning text-white">OWNER</span>
                                     @else

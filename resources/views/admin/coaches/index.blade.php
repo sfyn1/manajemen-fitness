@@ -22,7 +22,7 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-vcenter card-table table-hover">
-                        <thead>
+                        <thead class="text-center">
                             <tr>
                                 <th>Profil</th>
                                 <th>Nama Lengkap</th>
@@ -33,7 +33,7 @@
                         </thead>
                         <tbody>
                             @forelse($coaches as $coach)
-                            <tr>
+                            <tr id="coach-{{ $coach->id }}">
                                 <td>
                                     <span class="avatar bg-blue-lt">{{ substr($coach->name, 0, 1) }}</span>
                                 </td>

@@ -29,7 +29,7 @@
                     </thead>
                     <tbody>
                         @foreach($members as $member)
-                        <tr>
+                        <tr id="presence-{{ $member->id }}">
                             <td>
                                 <div class="d-flex py-1 align-items-center">
                                     <span class="avatar me-2" style="background-image: url({{ asset('template/assets/images/avatar/1.png') }})"></span>

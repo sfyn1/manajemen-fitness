@@ -67,7 +67,7 @@
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
-                            <thead class="bg-light">
+                            <thead class="text-center">
                                 <tr>
                                     <th class="px-4 py-3 text-muted fw-semibold" style="width: 50px;">NO</th>
                                     <th class="py-3 text-muted fw-semibold">NAMA</th>
@@ -81,7 +81,7 @@
                             </thead>
                             <tbody>
                                 @forelse($members as $index => $user)
-                                <tr>
+                                <tr id="member-{{ $user->member->id }}">
                                     <td class="px-4">
                                         <span class="text-muted fw-semibold">{{ $index + 1 }}</span>
                                     </td>

@@ -25,7 +25,7 @@
         </div>
         <div class="card-body p-0">
             <table class="table table-hover mb-0 align-middle">
-                <thead class="bg-light">
+                <thead class="text-center">
                     <tr>
                         <th class="px-4">Jam</th>
                         <th>Kelas & Coach</th>
