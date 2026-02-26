@@ -37,7 +37,7 @@ class AuthController extends Controller
             // Ini "Resepsionis" yang mengantar ke ruangan masing-masing
             switch ($user->role) {
                 case 'admin':
-                    return redirect()->route('admin.members.index');
+                    return redirect()->route('admin.dashboard');
                     break;
                 case 'owner':
                     return redirect()->route('owner.dashboard');
@@ -89,7 +89,7 @@ class AuthController extends Controller
 
         // Cek Role dan Arahkan ke Tempat yang Benar
         if ($user->role === 'admin') {
-            return redirect()->route('admin.members.index');
+            return redirect()->route('admin.dashboard');
         }
         
         if ($user->role === 'owner') {

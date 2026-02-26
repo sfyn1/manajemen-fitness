@@ -9,6 +9,7 @@ use App\Http\Controllers\ClassTypeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\AdminDashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -81,6 +82,9 @@ Route::middleware('auth')->group(function () {
 
 // --- 3. GRUP ROUTE ADMIN ---
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    
+    // DASHBOARD ADMIN
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     
     // ROUTE GLOBAL SEARCH
     Route::get('/search', [SearchController::class, 'search'])->name('search');

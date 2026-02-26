@@ -28,4 +28,10 @@ class Coach extends Model
     {
         return $this->belongsTo(ClassType::class, 'class_type_id');
     }
+
+    // Relasi: Pelatih ini "memiliki" banyak jadwal kelas
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }
