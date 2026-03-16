@@ -2,11 +2,13 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="page-header d-print-none mb-4">
-        <div class="row align-items-center">
-            <div class="col">
-                <h2 class="page-title">Manajemen Akun Staff</h2>
-                <div class="text-muted">Kelola akun untuk Admin, Owner, dan Coach.</div>
+    <!-- PAGE HEADER - MODERN DESIGN -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h2 class="mb-1 fw-bold">Manajemen Akun Staff</h2>
+                </div>
             </div>
         </div>
     </div>
