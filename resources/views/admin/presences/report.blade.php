@@ -56,6 +56,16 @@
                 <hr class="my-4 border-dark">
             </div>
 
+            <!-- SEARCH BOX -->
+            <div class="mb-3 d-print-none">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="feather-search"></i>
+                    </span>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Cari nama, tanggal, atau jam check-in...">
+                </div>
+            </div>
+
             <div class="table-responsive">
                 <table class="table table-bordered table-striped align-middle">
                     <thead class="text-center">
@@ -67,7 +77,7 @@
                             <th width="15%">Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="presenceTableBody">
                         @forelse($presences as $index => $row)
                         <tr>
                             <td class="text-center">{{ $index + 1 }}</td>
@@ -123,4 +133,63 @@
         .badge { border: 1px solid #000; color: black !important; background: transparent !important; }
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('presenceTableBody');
+        const allRows = Array.from(tableBody.querySelectorAll('tr'));
+        
+        // Store original rows
+        const originalRows = [...allRows];
+        
+        searchInput.addEventListener('keyup', function() {
+            const searchValue = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            if (searchValue === '') {
+                // Show all rows
+                originalRows.forEach(row => {
+                    row.style.display = '';
+                    visibleCount++;
+                });
+            } else {
+                originalRows.forEach(row => {
+                    // Get text from all cells
+                    const nama = row.cells[2]?.textContent.toLowerCase() || '';
+                    const tanggalJam = row.cells[1]?.textContent.toLowerCase() || '';
+                    const idMember = row.cells[3]?.textContent.toLowerCase() || '';
+                    
+                    // Combine all searchable text
+                    const rowText = nama + ' ' + tanggalJam + ' ' + idMember;
+                    
+                    // Check if search value matches
+                    if (rowText.includes(searchValue)) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Handle empty state
+            let emptyRow = tableBody.querySelector('.no-results-row');
+            if (visibleCount === 0) {
+                if (!emptyRow) {
+                    emptyRow = document.createElement('tr');
+                    emptyRow.className = 'no-results-row';
+                    emptyRow.innerHTML = '<td colspan="5" class="text-center py-4 text-muted">Tidak ada data yang sesuai dengan pencarian Anda.</td>';
+                    tableBody.appendChild(emptyRow);
+                }
+                emptyRow.style.display = '';
+            } else {
+                if (emptyRow) {
+                    emptyRow.style.display = 'none';
+                }
+            }
+        });
+    });
+</script>
+
 @endsection

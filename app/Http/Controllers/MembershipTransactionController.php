@@ -38,7 +38,31 @@ class MembershipTransactionController extends Controller
     // 2. FORM PERPANJANG MEMBERSHIP
     public function create()
     {
-        $members = User::where('role', 'member')->get();
+        // Ambil users dengan role member dan eager load member relation
+        $members = User::where('role', 'member')
+            ->with('member')
+            ->get()
+            ->filter(function ($user) {
+                return $user->member !== null;
+            });
+        
+        // Foreach untuk update status dan tambahkan ke array
+        $membersArray = [];
+        foreach ($members as $user) {
+            // Update status jika expired
+            $user->member->updateStatusIfExpired();
+            
+            // Reload untuk dapat data terbaru
+            $user->refresh();
+            
+            $membersArray[] = $user;
+        }
+        
+        // Convert ke collection dan sort
+        $members = collect($membersArray)->sortByDesc(function ($user) {
+            return $user->member->isExpired();
+        })->values();
+        
         $packages = MembershipPackage::all();
         return view('admin.billing.create', compact('members', 'packages'));
     }

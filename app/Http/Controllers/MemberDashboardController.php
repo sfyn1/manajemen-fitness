@@ -9,16 +9,26 @@ use Carbon\Carbon;
 
 class MemberDashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $member = $user->member; // Relasi dari User ke Member
 
-        // Ambil 5 riwayat kehadiran terakhir
-        $recentPresences = Presence::where('member_id', $member->id)
-                                   ->latest()
-                                   ->limit(5)
-                                   ->get();
+        // Build query untuk riwayat kehadiran
+        $query = Presence::where('member_id', $member->id);
+
+        // Filter berdasarkan pencarian tanggal dan jam
+        if ($request->filled('search_date')) {
+            $query->whereDate('created_at', $request->search_date);
+        }
+
+        if ($request->filled('search_time')) {
+            // Format: HH:MM
+            $query->whereTime('created_at', 'like', $request->search_time . '%');
+        }
+
+        // Ambil semua riwayat kehadiran (atau yang sudah difilter) diurutkan terbaru
+        $recentPresences = $query->latest()->get();
 
         // Hitung sisa hari membership
         $expiryDate = Carbon::parse($member->expiry_date);

@@ -15,6 +15,10 @@
                             onchange="this.form.submit()" style="width: auto;">
                     </form>
 
+                    <a href="{{ route('admin.billing.create') }}" class="btn btn-sm btn-primary fw-bold shadow-sm">
+                        <i class="feather-plus me-1"></i> Perpanjang Membership
+                    </a>
+
                     <a href="{{ route('admin.billing.pdf', ['month' => $selectedMonth]) }}" class="btn btn-sm btn-danger fw-bold shadow-sm">
                         <i class="feather-printer me-1"></i> Cetak Laporan
                     </a>

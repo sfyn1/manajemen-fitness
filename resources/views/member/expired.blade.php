@@ -29,13 +29,11 @@
                 </p>
 
                 <div class="alert alert-warning fs-13 text-start">
-                    <i class="feather-info me-1"></i> 
-                    Anda tidak dapat mengakses Dashboard latihan. Silakan hubungi Admin atau lakukan pembayaran (Billing) untuk memperpanjang akses.
+                    <i class="feather-info me-1"></i>
+                    Anda tidak dapat mengakses halaman ini. Silakan hubungi Admin untuk melakukan pembayaran untuk memperpanjang membership.
                 </div>
 
                 <div class="d-grid gap-2 mt-4">
-                    <button class="btn btn-secondary" disabled>Modul Billing (Coming Soon)</button>
-                    
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-outline-danger w-100">Keluar Aplikasi</button>

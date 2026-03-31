@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="{{ asset('template/assets/vendors/css/feather.min.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
     <style>
         :root {
             --dark:        #0f172a;
@@ -437,7 +436,118 @@
             box-shadow: 0 0 6px var(--success);
         }
 
-        .history-list { padding: 8px; }
+        .search-section {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .search-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .search-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .search-input {
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.875rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.2s;
+            min-width: 160px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255,255,255,0.08);
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(245,158,11,0.2);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .search-btn {
+            padding: 8px 16px;
+            background: var(--accent);
+            color: #0f172a;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .search-btn:hover {
+            background: #fb923c;
+            transform: translateY(-1px);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        .reset-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255,255,255,0.10);
+            color: #fff;
+        }
+
+        .history-list {
+            padding: 8px;
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar untuk history list */
+        .history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .history-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+        }
+
+        .history-list::-webkit-scrollbar-thumb {
+            background: rgba(245,158,11,0.4);
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        .history-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(245,158,11,0.6);
+        }
 
         .visit-item {
             display: flex;
@@ -650,6 +760,26 @@
                 </div>
             </div>
 
+            {{-- Search Section --}}
+            <form method="GET" action="{{ route('member.dashboard') }}" class="search-section">
+                <div class="search-group">
+                    <label class="search-label">Cari Tanggal</label>
+                    <input type="date" name="search_date" class="search-input" value="{{ request('search_date') }}">
+                </div>
+
+                <div class="search-group" style="margin-top: 20px;">
+                    <button type="submit" class="search-btn">
+                        <i class="feather-search" style="margin-right:5px;"></i>Cari
+                    </button>
+                </div>
+
+                @if(request('search_date') || request('search_time'))
+                <div class="search-group" style="margin-top: 20px;">
+                    <a href="{{ route('member.dashboard') }}" class="reset-btn">Reset</a>
+                </div>
+                @endif
+            </form>
+
             <div class="history-list">
                 @forelse($recentPresences as $presence)
                 <div class="visit-item">
@@ -670,7 +800,11 @@
                 @empty
                 <div class="empty-visits">
                     <i class="feather-calendar"></i>
-                    Belum ada data kunjungan latihan.
+                    @if(request('search_date') || request('search_time'))
+                        Tidak ada data kunjungan dengan kriteria pencarian tersebut.
+                    @else
+                        Belum ada data kunjungan latihan.
+                    @endif
                 </div>
                 @endforelse
             </div>

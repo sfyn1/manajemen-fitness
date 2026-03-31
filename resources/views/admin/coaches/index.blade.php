@@ -85,7 +85,7 @@
     <div class="mb-3">
         <label class="form-label fw-bold">Pilih Akun Coach <span class="text-danger">*</span></label>
         <select name="user_id" class="form-select" required>
-            <option value="">-- Pilih Akun yang sudah dibuat --</option>
+            <option value="">-- Pilih Akun --</option>
             
             {{-- Logic: Ambil User role 'coach' yg belum ada di tabel coaches --}}
             @php

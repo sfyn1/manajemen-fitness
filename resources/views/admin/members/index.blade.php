@@ -104,15 +104,19 @@
                                     <td>
                                         <div>
                                             <span class="text-dark d-block">{{ \Carbon\Carbon::parse($user->member->expiry_date)->format('d M Y') }}</span>
-                                            @if($user->member->expiry_date < date('Y-m-d'))
-                                            <small class="text-danger">Expired</small>
+                                            @if($user->member->isExpired())
+                                            <small class="text-danger fw-bold">Expired</small>
                                             @else
                                             <small class="text-success">Aktif</small>
                                             @endif
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="text-dark">{{ ucfirst($user->member->status) }}</span>
+                                        @if($user->member->isExpired())
+                                            <span class="badge bg-danger text-white">Expired</span>
+                                        @else
+                                            <span class="badge bg-success text-white">Active</span>
+                                        @endif
                                     </td>
                                     <td>
                                         <div class="d-flex gap-2 justify-content-center">

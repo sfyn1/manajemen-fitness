@@ -19,6 +19,14 @@ class MemberController extends Controller
     public function index()
     {
         $members = User::where('role', 'member')->with('member')->latest()->get();
+        
+        // Update status jika sudah expired
+        foreach ($members as $member) {
+            if ($member->member) {
+                $member->member->updateStatusIfExpired();
+            }
+        }
+        
         return view('admin.members.index', compact('members'));
     }
 

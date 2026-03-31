@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('template/assets/css/bootstrap.min.css') }}"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -32,9 +32,7 @@
             overflow: hidden;
         }
 
-        /* ══════════════════════════════
-           FULL PAGE LAYOUT
-        ══════════════════════════════ */
+        /* ══ LAYOUT ══ */
         .login-page {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -52,10 +50,9 @@
         }
 
         .left-bg {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80") no-repeat center center / cover;
-            filter: brightness(0.22) saturate(0.7);
+            filter: brightness(0.2) saturate(0.7);
             transform: scale(1.04);
             animation: bgZoom 14s ease infinite alternate;
         }
@@ -65,20 +62,17 @@
         }
 
         .left-overlay {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: linear-gradient(
                 160deg,
-                rgba(10,15,30,0.3) 0%,
-                rgba(10,15,30,0.6) 50%,
-                rgba(10,15,30,0.95) 100%
+                rgba(10,15,30,0.2) 0%,
+                rgba(10,15,30,0.55) 45%,
+                rgba(10,15,30,0.97) 100%
             );
         }
 
-        /* Grid texture */
         .left-grid {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background-image:
                 linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
@@ -86,32 +80,73 @@
             mask-image: linear-gradient(180deg, transparent 0%, black 40%, black 80%, transparent 100%);
         }
 
+        /* Accent orb */
+        .left-orb {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
         .left-content {
             position: relative;
             z-index: 2;
         }
 
-        /* Logo / Brand */
+        /* Brand */
         .brand-mark {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-family: 'Syne', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 800;
             font-size: 1rem;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.02em;
             color: #fff;
-            margin-bottom: 3rem;
+            margin-bottom: 2.75rem;
         }
         .brand-mark .a { color: var(--accent); }
 
+        /* Eyebrow badge */
+        .left-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-soft);
+            border: 1px solid rgba(245,158,11,0.2);
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 999px;
+            margin-bottom: 1.25rem;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+        .eyebrow-dot {
+            width: 5px; height: 5px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--accent);
+            animation: pulse 2s ease infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.4; transform: scale(0.7); }
+        }
+
         .left-headline {
-            font-family: 'Syne', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 800;
-            font-size: 2.6rem;
+            font-size: 2.5rem;
             color: #fff;
-            line-height: 1.1;
+            line-height: 1.12;
             margin-bottom: 1rem;
+            animation: fadeUp 0.5s 0.15s ease both;
         }
         .left-headline .hl {
             background: linear-gradient(90deg, var(--accent), var(--accent-2));
@@ -121,14 +156,15 @@
         }
 
         .left-sub {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.9rem;
-            line-height: 1.65;
-            margin-bottom: 2.5rem;
-            max-width: 360px;
+            color: rgba(255,255,255,0.48);
+            font-size: 0.88rem;
+            line-height: 1.7;
+            margin-bottom: 2.25rem;
+            max-width: 340px;
+            animation: fadeUp 0.5s 0.2s ease both;
         }
 
-        /* Feature pills */
+        /* Motivational pills */
         .feat-pills {
             display: flex;
             flex-direction: column;
@@ -139,16 +175,21 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px;
-            padding: 11px 16px;
-            backdrop-filter: blur(8px);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 13px;
+            padding: 12px 16px;
+            backdrop-filter: blur(10px);
             animation: slideInLeft 0.5s ease both;
+            transition: background 0.2s, border-color 0.2s;
         }
-        .feat-pill:nth-child(1) { animation-delay: 0.2s; }
-        .feat-pill:nth-child(2) { animation-delay: 0.32s; }
-        .feat-pill:nth-child(3) { animation-delay: 0.44s; }
+        .feat-pill:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(245,158,11,0.18);
+        }
+        .feat-pill:nth-child(1) { animation-delay: 0.25s; }
+        .feat-pill:nth-child(2) { animation-delay: 0.38s; }
+        .feat-pill:nth-child(3) { animation-delay: 0.51s; }
 
         @keyframes slideInLeft {
             from { opacity: 0; transform: translateX(-16px); }
@@ -156,18 +197,41 @@
         }
 
         .pill-icon {
-            width: 34px;
-            height: 34px;
+            width: 36px; height: 36px;
             background: var(--accent-soft);
-            border-radius: 9px;
+            border: 1px solid rgba(245,158,11,0.18);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 15px;
+            font-size: 16px;
             flex-shrink: 0;
         }
-        .pill-text strong { display: block; font-size: 0.85rem; font-weight: 600; color: #fff; line-height: 1.2; }
-        .pill-text span   { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+        .pill-text strong {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.25;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .pill-text span {
+            font-size: 0.74rem;
+            color: rgba(255,255,255,0.38);
+        }
+
+        /* Divider with quote */
+        .left-quote {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            color: rgba(255,255,255,0.3);
+            font-size: 0.8rem;
+            font-style: italic;
+            line-height: 1.6;
+            animation: fadeUp 0.5s 0.6s ease both;
+        }
+        .left-quote span { color: var(--accent); font-style: normal; font-weight: 700; }
 
         /* ══ RIGHT PANEL ══ */
         .right-panel {
@@ -180,25 +244,20 @@
             overflow: hidden;
         }
 
-        /* Subtle radial glow */
         .right-panel::before {
             content: '';
             position: absolute;
-            top: -100px;
-            right: -100px;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%);
+            top: -100px; right: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(245,158,11,0.05) 0%, transparent 70%);
             pointer-events: none;
         }
         .right-panel::after {
             content: '';
             position: absolute;
-            bottom: -80px;
-            left: -80px;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%);
+            bottom: -80px; left: -80px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(99,102,241,0.04) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -224,27 +283,53 @@
             text-decoration: none;
             font-size: 0.8rem;
             font-weight: 500;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2.25rem;
             transition: color 0.2s;
         }
         .back-link:hover { color: #fff; }
         .back-link svg { transition: transform 0.2s; }
         .back-link:hover svg { transform: translateX(-3px); }
 
+        /* Welcome badge */
+        .form-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--accent-soft);
+            border: 1px solid rgba(245,158,11,0.18);
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 5px 13px;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+
         /* Title */
         .form-title {
-            font-family: 'Syne', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 800;
-            font-size: 1.9rem;
+            font-size: 1.85rem;
             color: #fff;
-            margin-bottom: 6px;
-            line-height: 1.15;
+            margin-bottom: 5px;
+            line-height: 1.18;
         }
 
         .form-subtitle {
             color: var(--text-muted);
             font-size: 0.875rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.75rem;
+            line-height: 1.55;
+        }
+        .form-subtitle strong { color: var(--accent); font-weight: 700; }
+
+        /* Divider */
+        .form-divider {
+            height: 1px;
+            background: var(--border);
+            margin-bottom: 1.75rem;
         }
 
         /* Alerts */
@@ -263,16 +348,17 @@
         .alert-custom ul { margin: 0; padding-left: 1rem; }
 
         /* Form fields */
-        .field-group { margin-bottom: 1.25rem; }
+        .field-group { margin-bottom: 1.2rem; }
 
         .field-label {
             display: block;
-            font-size: 0.78rem;
+            font-size: 0.77rem;
             font-weight: 700;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
             color: var(--text-muted);
             margin-bottom: 8px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .field-input {
@@ -287,29 +373,56 @@
             outline: none;
             transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
         }
-        .field-input::placeholder { color: rgba(148,163,184,0.5); }
+        .field-input::placeholder { color: rgba(148,163,184,0.4); }
         .field-input:focus {
             border-color: rgba(245,158,11,0.45);
             background: rgba(255,255,255,0.07);
             box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
         }
 
-        /* Password wrapper (for show/hide) */
+        /* Password wrapper */
         .pw-wrap { position: relative; }
         .pw-toggle {
             position: absolute;
-            right: 14px;
-            top: 50%;
+            right: 14px; top: 50%;
             transform: translateY(-50%);
-            background: none;
-            border: none;
+            background: none; border: none;
             color: var(--text-muted);
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
+            cursor: pointer; padding: 0; line-height: 1;
             transition: color 0.2s;
         }
         .pw-toggle:hover { color: #fff; }
+
+        /* Remember row */
+        .form-row-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.4rem;
+            margin-top: 0.25rem;
+        }
+        .remember-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+        }
+        .remember-label input[type="checkbox"] {
+            width: 15px; height: 15px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+        .forgot-link {
+            font-size: 0.82rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .forgot-link:hover { opacity: 0.75; }
 
         /* Submit button */
         .btn-submit {
@@ -319,14 +432,17 @@
             color: #0a0f1e;
             border: none;
             border-radius: 11px;
-            font-family: 'Syne', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 800;
             font-size: 0.95rem;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
             cursor: pointer;
             transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
             box-shadow: 0 4px 20px rgba(245,158,11,0.2);
-            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         .btn-submit:hover {
             opacity: 0.9;
@@ -335,23 +451,41 @@
         }
         .btn-submit:active { transform: translateY(0); }
 
-        /* Links below form */
+        /* Form footer */
         .form-footer {
-            margin-top: 1.75rem;
+            margin-top: 1.5rem;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
         }
-
-        .form-footer a {
+        .form-footer p {
+            font-size: 0.8rem;
             color: var(--text-muted);
-            font-size: 0.82rem;
+            line-height: 1.6;
+        }
+        .form-footer a {
+            color: #e2e8f0;
             text-decoration: none;
             transition: color 0.2s;
         }
         .form-footer a:hover { color: #fff; }
-        .form-footer a strong { color: var(--accent); font-weight: 700; }
+
+        /* Trust badge row */
+        .trust-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 1.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            color: rgba(148,163,184,0.55);
+        }
+        .trust-item svg { color: rgba(245,158,11,0.5); }
 
         /* ══ RESPONSIVE ══ */
         @media (max-width: 900px) {
@@ -371,47 +505,51 @@
         <div class="left-bg"></div>
         <div class="left-overlay"></div>
         <div class="left-grid"></div>
+        <div class="left-orb"></div>
 
         <div class="left-content">
-            <div class="brand-mark">⚡ <span class="a">GMF</span> SYSTEM</div>
+            <div class="brand-mark">⚡ <span class="a">GINTUNG</span> MASTER FITNESS</div>
 
             <h2 class="left-headline">
-                Sistem Digital<br>untuk <span class="hl">Gym Modern</span>
+                Setiap Rep<br>Membawamu Lebih<br>Dekat ke <span class="hl">Versi Terbaik</span>
             </h2>
 
             <p class="left-sub">
-                Kelola membership, presensi QR Code, jadwal kelas, dan laporan coach
-                dalam satu platform terintegrasi.
+                Bergabunglah bersama ratusan member yang sudah membuktikan perubahan nyata. Trainer berpengalaman, fasilitas lengkap, harga terjangkau.
             </p>
 
             <div class="feat-pills">
                 <div class="feat-pill">
                     <div class="pill-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <div class="pill-text">
+                        <strong>Program Terstruktur</strong>
+                        <span>Gym, Muaythai & Boxing setiap minggu</span>
+                    </div>
+                </div>
+                <div class="feat-pill">
+                    <div class="pill-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     </div>
                     <div class="pill-text">
-                        <strong>Manajemen Member</strong>
-                        <span>Status, paket, dan perpanjangan otomatis</span>
+                        <strong>Trainer Bersertifikat</strong>
+                        <span>Siap membimbing dari level pemula</span>
                     </div>
                 </div>
                 <div class="feat-pill">
                     <div class="pill-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                     </div>
                     <div class="pill-text">
-                        <strong>Presensi QR Code</strong>
-                        <span>Check-in instan, akurat & real-time</span>
+                        <strong>Harga Mulai Rp 150.000</strong>
+                        <span>Paket bulanan tanpa biaya tersembunyi</span>
                     </div>
                 </div>
-                <div class="feat-pill">
-                    <div class="pill-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    </div>
-                    <div class="pill-text">
-                        <strong>Jadwal & Booking Kelas</strong>
-                        <span>Muaythai, Boxing, dan lainnya</span>
-                    </div>
-                </div>
+            </div>
+
+            <div class="left-quote">
+                "Tidak ada yang namanya terlambat untuk mulai. <span>Hari ini</span> adalah hari terbaik untuk berubah."
             </div>
         </div>
     </div>
@@ -425,7 +563,13 @@
                 Kembali ke Beranda
             </a>
 
-            <h1 class="form-title">Selamat Datang</h1>
+            <h1 class="form-title">Halo, Selamat<br>Datang Kembali!</h1>
+            <p class="form-subtitle">
+                Masuk untuk melanjutkan perjalanan fitness-mu.<br>
+                Belum punya akun? <strong>Hubungi admin kami.</strong>
+            </p>
+
+            <div class="form-divider"></div>
 
             {{-- Alerts --}}
             @if($errors->any())
@@ -454,7 +598,7 @@
                 @csrf
 
                 <div class="field-group">
-                    <label class="field-label" for="email">Email Address</label>
+                    <label class="field-label" for="email">Email</label>
                     <input
                         type="email"
                         id="email"
@@ -483,16 +627,36 @@
                     </div>
                 </div>
 
+                <div class="form-row-between">
+                    <label class="remember-label">
+                        <input type="checkbox" name="remember"> Ingat saya
+                    </label>
+                    <a href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
+                </div>
+
                 <button type="submit" class="btn-submit">
-                    Masuk Sekarang →
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    Masuk Sekarang
                 </button>
             </form>
 
+            <div class="trust-row">
+                <div class="trust-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    Koneksi aman
+                </div>
+                <div class="trust-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Data terlindungi
+                </div>
+                <div class="trust-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Akses 24/7
+                </div>
+            </div>
+
             <div class="form-footer">
-                <a href="{{ route('password.request') }}">
-                    Lupa password? <strong>Reset di sini</strong>
-                </a>
-                <a href="{{ url('/') }}">Kembali ke Halaman Utama</a>
+                <p>Belum punya akun member? <a href="https://wa.me/6281234567890" target="_blank" style="color:var(--accent);font-weight:700;">Daftar via WhatsApp →</a></p>
             </div>
 
         </div>
@@ -501,7 +665,6 @@
 </div>
 
 <script>
-    // Password show/hide
     const pwToggle = document.getElementById('pwToggle');
     const pwInput  = document.getElementById('password');
     pwToggle.addEventListener('click', () => {

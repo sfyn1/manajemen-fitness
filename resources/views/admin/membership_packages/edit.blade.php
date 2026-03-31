@@ -23,7 +23,18 @@
                     <label>Keterangan</label>
                     <textarea name="description" class="form-control">{{ $package->description }}</textarea>
                 </div>
-                <button type="submit" class="btn btn-warning w-100 fw-bold">Update Harga</button>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn w-100 fw-bold"
+                        style="background-color: #3454d1; border-color: #3454d1; color: #ffffff;">
+                        Update Harga
+                    </button>
+
+                    <a href="{{ route('admin.membership-packages.index') }}" class="btn btn-outline-secondary w-100 fw-bold">
+                        Batal
+                    </a>
+                </div>
+
             </form>
         </div>
     </div>
