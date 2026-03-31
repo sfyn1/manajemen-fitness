@@ -26,7 +26,7 @@
                         <th class="text-end px-4">Cetak</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     @forelse($payouts as $p)
                     <tr>
                         <td class="px-4 fw-bold">{{ $p->payout_number }}</td>

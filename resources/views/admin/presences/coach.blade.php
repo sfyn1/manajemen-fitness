@@ -31,10 +31,10 @@
                         <th>Kelas & Coach</th>
                         <th>Bukti Foto</th>
                         <th>Status</th>
-                        <th class="text-end px-4">Aksi</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     @forelse($schedules as $schedule)
                         {{-- Cari data laporan coach untuk jadwal ini & tanggal ini --}}
                         @php
@@ -74,9 +74,9 @@
                                 <span class="badge bg-danger">Ditolak</span>
                             @endif
                         </td>
-                        <td class="text-end px-4">
+                        <td class="text-center px-4">
                             @if($presence && $presence->status == 'pending')
-                                <form action="{{ route('admin.presences.approve', $presence->id) }}" method="POST">
+                                <form action="{{ route('admin.presences.approve', $presence->id) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-success fw-bold shadow-sm">
                                         <i class="feather-check-circle me-1"></i> Approve

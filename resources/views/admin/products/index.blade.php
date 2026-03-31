@@ -25,7 +25,7 @@
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     @forelse($products as $product)
                     <tr id="product-{{ $product->id }}">
                         <td class="px-4">

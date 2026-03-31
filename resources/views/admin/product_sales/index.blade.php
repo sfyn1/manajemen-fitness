@@ -1,16 +1,20 @@
 @extends('layouts.admin')
 @section('content')
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold">Riwayat Penjualan Produk</h2>
-        <div>
-            <a href="{{ route('admin.product-sales.pdf') }}" class="btn btn-danger me-2" target="_blank">
-                <i class="feather-printer"></i> Download PDF
-            </a>
-
-            <a href="{{ route('admin.product-sales.create') }}" class="btn btn-success">
-                <i class="feather-shopping-cart"></i> Jual Produk Baru
-            </a>
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0 fw-bold">Riwayat Penjualan Produ</h2>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('admin.product-sales.create') }}" class="btn btn-primary">
+                        <i class="feather-shopping-cart"></i> Jual Produk Baru
+                    </a>
+                    <a href="{{ route('admin.product-sales.pdf') }}" class="btn btn-primary btn-danger">
+                        <i class="feather-printer"></i> Cetak Laporan
+                    </a>
+                </div>    
+            </div>
         </div>
     </div>
 
@@ -30,7 +34,7 @@
                         <th>Tanggal</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     @forelse($transactions as $trx)
                     <tr>
                         <td class="px-4 fw-bold">{{ $trx->invoice_number }}</td>

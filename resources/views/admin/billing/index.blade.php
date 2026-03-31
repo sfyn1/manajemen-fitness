@@ -43,7 +43,7 @@
                         <th>Tanggal</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     @forelse($transactions as $trx)
                     <tr>
                         <td class="px-4 fw-bold">{{ $trx->invoice_number }}</td>

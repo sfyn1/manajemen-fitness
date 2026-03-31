@@ -31,7 +31,7 @@
                                 <th class="w-1">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="text-center">
                             @forelse($coaches as $coach)
                             <tr id="coach-{{ $coach->id }}">
                                 <td>
@@ -50,9 +50,11 @@
                                     <form action="{{ route('admin.coaches.destroy', $coach->id) }}" method="POST" onsubmit="return confirm('Yakin hapus pelatih ini?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-icon btn-ghost-danger btn-sm" title="Hapus">
-                                            <i class="feather-trash-2"></i>
-                                        </button>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-icon btn-ghost-danger btn-sm" title="Hapus">
+                                                <i class="feather-trash-2"></i>
+                                            </button>
+                                        </div>
                                     </form>
                                 </td>
                             </tr>

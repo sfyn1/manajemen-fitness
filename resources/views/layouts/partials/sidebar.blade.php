@@ -91,10 +91,10 @@
                     </a>
                     <ul class="nxl-submenu">
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.coaches.index') }}">Data Pelatih</a>
+                            <a class="nxl-link" href="{{ route('admin.classtypes.index') }}">Jenis Kelas</a>
                         </li>
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.classtypes.index') }}">Jenis Kelas</a>
+                            <a class="nxl-link" href="{{ route('admin.coaches.index') }}">Data Pelatih</a>
                         </li>
                         <li class="nxl-item">
                             <a class="nxl-link" href="{{ route('admin.schedules.index') }}">Atur Jadwal</a>

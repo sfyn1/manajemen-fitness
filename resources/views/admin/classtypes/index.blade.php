@@ -30,7 +30,7 @@
                                 <th class="w-1">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="text-center">
                             @forelse($classTypes as $class)
                             <tr id="classtype-{{ $class->id }}">
                                 <td>
@@ -55,9 +55,11 @@
                                     <form action="{{ route('admin.classtypes.destroy', $class->id) }}" method="POST" onsubmit="return confirm('Hapus kelas ini? Jadwal terkait mungkin akan error.');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-icon btn-ghost-danger btn-sm" title="Hapus">
-                                            <i class="feather-trash-2"></i>
-                                        </button>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-icon btn-ghost-danger btn-sm" title="Hapus">
+                                                <i class="feather-trash-2"></i>
+                                            </button>
+                                        </div>
                                     </form>
                                 </td>
                             </tr>
