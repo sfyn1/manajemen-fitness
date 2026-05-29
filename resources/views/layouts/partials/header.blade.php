@@ -15,7 +15,7 @@
             </a>
             <!--! [Start] nxl-head-mobile-toggler !-->
             <!--! [Start] nxl-navigation-toggle !-->
-            <div class="nxl-navigation-toggle">
+            <div class="nxl-navigation-toggle d-none d-lg-flex">
                 <a href="javascript:void(0);" id="menu-mini-button">
                     <i class="feather-align-left"></i>
                 </a>
@@ -25,7 +25,7 @@
             </div>
             <!--! [End] nxl-navigation-toggle !-->
             <!--! [Start] nxl-lavel-mega-menu-toggle !-->
-            <div class="nxl-lavel-mega-menu-toggle d-flex d-lg-none">
+            <div class="nxl-lavel-mega-menu-toggle d-none">
                 <a href="javascript:void(0);" id="nxl-lavel-mega-menu-open">
                     <i class="feather-align-left"></i>
                 </a>

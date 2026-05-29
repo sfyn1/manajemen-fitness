@@ -63,18 +63,53 @@
                 </table>
             </div>
         </div>
+        <div class="card-footer bg-white border-top d-flex align-items-center justify-content-between flex-wrap gap-2 py-3">
+            <div class="text-muted" style="font-size:13px;">
+                Menampilkan
+                <strong>{{ $members->firstItem() ?? 0 }}</strong>
+                –
+                <strong>{{ $members->lastItem() ?? 0 }}</strong>
+                dari
+                <strong>{{ $members->total() }}</strong>
+                data
+            </div>
+            <div>
+                {{ $members->appends(request()->query())->links() }}
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    /* ===== PAGINATION ===== */
+    .card-footer .pagination {
+        margin: 0 !important;
+    }
+    .card-footer .pagination .page-item .page-link {
+        font-size: 13px;
+        padding: 5px 10px;
+        border-radius: 6px !important;
+        margin: 0 2px;
+        border-color: #e2e8f0;
+        color: #4e73df;
+    }
+    .card-footer .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        border-color: #4e73df;
+        color: #fff;
+    }
+    .card-footer .pagination .page-item.disabled .page-link {
+        color: #adb5bd;
+    }
+</style>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         $('#table-history').DataTable({
             "order": [[ 1, "desc" ]], // Default urutkan berdasarkan kehadiran hari ini
-            "language": {
-                "search": "Cari Member:",
-                "lengthMenu": "Tampilkan _MENU_ data",
-                "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ member"
-            }
+            "paging": false,
+            "info": false,
+            "searching": false // Search Laravel akan butuh form pencarian server-side
         });
     });
 </script>

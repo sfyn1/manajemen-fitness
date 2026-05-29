@@ -23,12 +23,12 @@ class CoachPresenceController extends Controller
         $schedules = Schedule::with(['coach', 'classType'])
                              ->where('day', $dayName)
                              ->orderBy('start_time')
-                             ->get();
+                             ->paginate(15);
 
         return view('admin.presences.coach', compact('schedules', 'date'));
     }
 
-    // 2. ADMIN APPROVE (KONFIRMASI SELESAI)
+    // 2. ADMIN APPROVE (KONFIRMASI SELESAI & BUAT TRANSAKSI KELAS)
     public function approve($id)
     {
         // Cari data presensi berdasarkan ID yang dikirim
@@ -39,7 +39,39 @@ class CoachPresenceController extends Controller
             'status' => 'approved'
         ]);
 
-        return back()->with('success', 'Sesi berhasil disetujui. Gaji coach telah dihitung.');
+        // LOGIKA TAMBAHAN: Buat Transaksi Pemasukan Kelas
+        $schedule = Schedule::with('classType')->findOrFail($presence->schedule_id);
+        $totalMembers = \App\Models\Booking::where('schedule_id', $schedule->id)
+            ->where('date', Carbon::parse($presence->date)->format('Y-m-d'))
+            ->count();
+            
+        $classPrice = $schedule->classType->price;
+
+        // Jika ada member yang ikut dan harga kelas > 0, catat sebagai pemasukan
+        if ($totalMembers > 0 && $classPrice > 0) {
+            $totalIncome = $totalMembers * $classPrice;
+
+            $transaction = \App\Models\Transaction::create([
+                'invoice_number' => 'INV-CLS-' . date('dmy') . '-' . rand(1000, 9999),
+                'user_id' => null, // Pembayaran kolektif di tempat
+                'grand_total' => $totalIncome,
+                'status' => 'paid',
+                'payment_method' => 'cash',
+                'transaction_date' => now(),
+            ]);
+
+            \App\Models\TransactionItem::create([
+                'transaction_id' => $transaction->id,
+                'itemable_id' => $schedule->classType->id,
+                'itemable_type' => \App\Models\ClassType::class,
+                'name' => 'Tiket Kelas ' . $schedule->classType->name,
+                'price' => $classPrice,
+                'quantity' => $totalMembers,
+                'subtotal' => $totalIncome,
+            ]);
+        }
+
+        return back()->with('success', 'Sesi disetujui. Gaji coach dan pemasukan kelas telah tercatat.');
     }
     
     // 3. ADMIN REJECT (OPSIONAL - JIKA FOTO TIDAK JELAS)

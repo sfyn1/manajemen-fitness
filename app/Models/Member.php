@@ -35,6 +35,24 @@ class Member extends Model
         return $this->hasMany(Presence::class);
     }
 
+    // Relasi ke Langganan PT
+    public function ptSubscriptions()
+    {
+        return $this->hasMany(PtSubscription::class);
+    }
+
+    // Langganan PT yang sedang aktif
+    public function activePtSubscription()
+    {
+        return $this->hasOne(PtSubscription::class)->where('status', 'active');
+    }
+
+    // Sesi PT individual
+    public function ptSessions()
+    {
+        return $this->hasMany(PtSession::class);
+    }
+
     /**
      * Accessor untuk mendapatkan status yang benar berdasarkan tanggal expiry
      * Jika sudah expired, otomatis return 'expired', jika tidak return 'active'

@@ -501,7 +501,10 @@
 {{-- ══ NAV ══ --}}
 <nav class="top-nav">
     <div class="nav-inner">
-        <span class="nav-logo">⚡ <span class="a">GMF</span> COACH</span>
+        <span class="nav-logo">
+            <img src="{{ asset('template/assets/images/logo-abbr.png') }}" style="height:48px" alt="GMF">
+            <span style="margin-left:8px;">COACH</span>
+        </span>
 
         <div class="coach-pill">
             <div class="coach-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
@@ -551,8 +554,8 @@
             </div>
         </div>
         <div class="class-count-wrap">
-            <div class="class-count">{{ $schedules->count() }}</div>
-            <div class="class-count-label">Kelas</div>
+            <div class="class-count">{{ $schedules->count() + $ptSessions->count() }}</div>
+            <div class="class-count-label">Sesi / Kelas</div>
         </div>
     </div>
 
@@ -580,6 +583,7 @@
 
     @if(!$sch->presence)
 
+        @if($targetDate->isToday())
         <button type="button"
                 class="btn-lapor"
                 onclick="toggleUpload({{ $sch->id }})">
@@ -628,6 +632,19 @@
 
             </form>
         </div>
+        @elseif($targetDate->format('Y-m-d') > \Carbon\Carbon::today()->format('Y-m-d'))
+        <div class="status-box" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div class="status-title" style="color: var(--text-muted);">Sesi Belum Dimulai</div>
+            <div class="status-sub">Laporan dikirim setelah sesi selesai.</div>
+        </div>
+        @else
+        <div class="status-box" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#ef4444;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div class="status-title" style="color: #ef4444;">Waktu Lapor Habis</div>
+            <div class="status-sub">Laporan hanya bisa dikirim pada hari H.</div>
+        </div>
+        @endif
 
     @elseif($sch->presence->status == 'pending')
 
@@ -668,12 +685,82 @@
         
 
         @empty
+        @endforelse
+
+        @forelse($ptSessions as $pt)
+        <div class="sch-card">
+            <div class="card-stripe" style="background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
+            <div class="sch-body">
+
+                <div class="sch-top">
+                    <span class="class-badge" style="color: #3b82f6; background: rgba(59,130,246,0.12); border-color: rgba(59,130,246,0.18);">Personal Training</span>
+                    <span class="class-time">{{ \Carbon\Carbon::parse($pt->start_time)->format('H:i') }}</span>
+                </div>
+
+                <div class="class-title">Sesi PT: {{ $pt->member->user->name ?? 'Member' }}</div>
+
+                <div class="member-row" style="border-bottom:none; margin-bottom:0.5rem; padding-bottom:0;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#3b82f6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Sesi ke-<b>{{ $pt->session_number }}</b>
+                </div>
+                <div class="member-row">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#3b82f6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Durasi: <b>{{ \Carbon\Carbon::parse($pt->start_time)->diffInMinutes(\Carbon\Carbon::parse($pt->end_time)) }} Menit</b> ({{ \Carbon\Carbon::parse($pt->end_time)->format('H:i') }})
+                </div>
+
+                <div class="sch-action">
+
+    @if($pt->status === 'scheduled')
+        <form action="{{ route('coach.pt.sessions.complete', $pt->id) }}" method="POST">
+            @csrf
+            <button type="submit" class="btn-lapor" style="background: linear-gradient(135deg, #3b82f6, #60a5fa); color: #fff;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Tandai Selesai
+            </button>
+        </form>
+        <form action="{{ route('coach.pt.sessions.noshow', $pt->id) }}" method="POST" style="margin-top: 8px;">
+            @csrf
+            <button type="submit" class="btn-lapor" style="background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); font-size: 0.8rem; padding: 8px;" onclick="return confirm('Tandai member tidak hadir (No-Show)?')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
+                Member No-Show
+            </button>
+        </form>
+
+    @elseif($pt->status === 'completed')
+        <div class="status-box status-approved">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="status-title">Sesi Selesai</div>
+            <div class="status-sub">Gaji dihitung otomatis.</div>
+        </div>
+
+    @elseif($pt->status === 'no_show')
+        <div class="status-box status-pending">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <div class="status-title" style="color: #f59e0b;">Member Tidak Hadir</div>
+            <div class="status-sub">Sesi tetap dihitung.</div>
+        </div>
+
+    @elseif($pt->status === 'cancelled')
+        <div class="status-box" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#ef4444;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div class="status-title" style="color: #ef4444;">Sesi Dibatalkan</div>
+            <div class="status-sub">{{ $pt->cancel_reason ?? 'Dibatalkan oleh member.' }}</div>
+        </div>
+    @endif
+
+                </div>
+            </div>
+        </div>
+        @empty
+        @endforelse
+
+        @if($schedules->isEmpty() && $ptSessions->isEmpty())
         <div class="empty-state">
             <span class="empty-icon">📅</span>
             <h5>Tidak Ada Jadwal</h5>
             <p>Tidak ada jadwal mengajar pada<br><b style="color:#fff">{{ $targetDate->format('d M Y') }}</b>.</p>
         </div>
-        @endforelse
+        @endif
     </div>
 
 </div>
@@ -686,17 +773,27 @@
 </div>
 @endif
 
+@if(session('error'))
+<div class="toast-custom" id="toastMsgErr" style="background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: #fca5a5;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    {{ session('error') }}
+</div>
+@endif
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // Auto-hide toast after 4s
-    const toast = document.getElementById('toastMsg');
-    if (toast) {
-        setTimeout(() => {
-            toast.style.transition = 'opacity 0.4s';
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 400);
-        }, 4000);
-    }
+    const toasts = ['toastMsg', 'toastMsgErr'];
+    toasts.forEach(id => {
+        const toast = document.getElementById(id);
+        if (toast) {
+            setTimeout(() => {
+                toast.style.transition = 'opacity 0.4s';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+    });
 </script>
 
 <script>

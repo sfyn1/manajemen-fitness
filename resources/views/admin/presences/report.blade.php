@@ -56,15 +56,6 @@
                 <hr class="my-4 border-dark">
             </div>
 
-            <!-- SEARCH BOX -->
-            <div class="mb-3 d-print-none">
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="feather-search"></i>
-                    </span>
-                    <input type="text" id="searchInput" class="form-control" placeholder="Cari nama, tanggal, atau jam check-in...">
-                </div>
-            </div>
 
             <div class="table-responsive">
                 <table class="table table-bordered table-striped align-middle">
@@ -80,7 +71,7 @@
                     <tbody id="presenceTableBody">
                         @forelse($presences as $index => $row)
                         <tr>
-                            <td class="text-center">{{ $index + 1 }}</td>
+                            <td class="text-center">{{ $presences->firstItem() + $loop->iteration - 1 }}</td>
                             <td class="text-center fw-bold">{{ date('d M Y H:i', strtotime($row->check_in_time)) }}</td>
                             <td>
                                 <div>{{ $row->member->user->name }}</div>
@@ -102,8 +93,19 @@
                 </table>
             </div>
 
-            <div class="mt-4">
-                <h5>Total Kunjungan: <span class="fw-bold text-primary">{{ count($presences) }}</span> Orang</h5>
+            <div class="mt-4 card-footer bg-white border-top d-flex align-items-center justify-content-between flex-wrap gap-2 py-3 d-print-none">
+                <div class="text-muted" style="font-size:13px;">
+                    Menampilkan
+                    <strong>{{ $presences->firstItem() ?? 0 }}</strong>
+                    –
+                    <strong>{{ $presences->lastItem() ?? 0 }}</strong>
+                    dari
+                    <strong>{{ $presences->total() }}</strong>
+                    data
+                </div>
+                <div>
+                    {{ $presences->appends(request()->query())->onEachSide(1)->links() }}
+                </div>
             </div>
 
             <div class="d-none d-print-block mt-5">
@@ -132,64 +134,29 @@
         .card { border: none !important; box-shadow: none !important; }
         .badge { border: 1px solid #000; color: black !important; background: transparent !important; }
     }
-</style>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('searchInput');
-        const tableBody = document.getElementById('presenceTableBody');
-        const allRows = Array.from(tableBody.querySelectorAll('tr'));
-        
-        // Store original rows
-        const originalRows = [...allRows];
-        
-        searchInput.addEventListener('keyup', function() {
-            const searchValue = this.value.toLowerCase().trim();
-            let visibleCount = 0;
-            
-            if (searchValue === '') {
-                // Show all rows
-                originalRows.forEach(row => {
-                    row.style.display = '';
-                    visibleCount++;
-                });
-            } else {
-                originalRows.forEach(row => {
-                    // Get text from all cells
-                    const nama = row.cells[2]?.textContent.toLowerCase() || '';
-                    const tanggalJam = row.cells[1]?.textContent.toLowerCase() || '';
-                    const idMember = row.cells[3]?.textContent.toLowerCase() || '';
-                    
-                    // Combine all searchable text
-                    const rowText = nama + ' ' + tanggalJam + ' ' + idMember;
-                    
-                    // Check if search value matches
-                    if (rowText.includes(searchValue)) {
-                        row.style.display = '';
-                        visibleCount++;
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            }
-            
-            // Handle empty state
-            let emptyRow = tableBody.querySelector('.no-results-row');
-            if (visibleCount === 0) {
-                if (!emptyRow) {
-                    emptyRow = document.createElement('tr');
-                    emptyRow.className = 'no-results-row';
-                    emptyRow.innerHTML = '<td colspan="5" class="text-center py-4 text-muted">Tidak ada data yang sesuai dengan pencarian Anda.</td>';
-                    tableBody.appendChild(emptyRow);
-                }
-                emptyRow.style.display = '';
-            } else {
-                if (emptyRow) {
-                    emptyRow.style.display = 'none';
-                }
-            }
-        });
-    });
-</script>
+    /* ===== PAGINATION ===== */
+    .card-footer .pagination {
+        margin: 0 !important;
+    }
+    .card-footer .pagination .page-item .page-link {
+        font-size: 13px;
+        padding: 5px 10px;
+        border-radius: 6px !important;
+        margin: 0 2px;
+        border-color: #e2e8f0;
+        color: #4e73df;
+    }
+    .card-footer .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        border-color: #4e73df;
+        color: #fff;
+    }
+    .card-footer .pagination .page-item.disabled .page-link {
+        color: #adb5bd;
+        background: transparent;
+        border: none;
+    }
+</style>
 
 @endsection

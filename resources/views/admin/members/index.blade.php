@@ -81,9 +81,9 @@
                             </thead>
                             <tbody>
                                 @forelse($members as $index => $user)
-                                <tr id="member-{{ $user->member->id }}">
+                                <tr id="member-{{ $user->member?->id ?? '' }}">
                                     <td class="px-4">
-                                        <span class="text-muted fw-semibold">{{ $index + 1 }}</span>
+                                        <span class="text-muted fw-semibold">{{ $members->firstItem() + $loop->iteration - 1 }}</span>
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
@@ -93,18 +93,18 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="text-dark">{{ $user->member->phone_number ?? '-' }}</span>
+                                        <span class="text-dark">{{ $user->member?->phone_number ?? '-' }}</span>
                                     </td>
                                     <td>
-                                        {{ $user->member->gender }}
+                                        {{ $user->member?->gender ?? '-' }}
                                     </td>
                                     <td>
-                                        <span class="text-dark">{{ \Carbon\Carbon::parse($user->member->join_date)->format('d M Y') }}</span>
+                                        <span class="text-dark">{{ $user->member?->join_date ? \Carbon\Carbon::parse($user->member->join_date)->format('d M Y') : '-' }}</span>
                                     </td>
                                     <td>
                                         <div>
-                                            <span class="text-dark d-block">{{ \Carbon\Carbon::parse($user->member->expiry_date)->format('d M Y') }}</span>
-                                            @if($user->member->isExpired())
+                                            <span class="text-dark d-block">{{ $user->member?->expiry_date ? \Carbon\Carbon::parse($user->member->expiry_date)->format('d M Y') : '-' }}</span>
+                                            @if($user->member && $user->member->isExpired())
                                             <small class="text-danger fw-bold">Expired</small>
                                             @else
                                             <small class="text-success">Aktif</small>
@@ -112,7 +112,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        @if($user->member->isExpired())
+                                        @if($user->member && $user->member->isExpired())
                                             <span class="badge bg-danger text-white">Expired</span>
                                         @else
                                             <span class="badge bg-success text-white">Active</span>
@@ -177,6 +177,20 @@
                         </table>
                     </div>
                 </div>
+                <div class="card-footer bg-white border-top d-flex align-items-center justify-content-between flex-wrap gap-2 py-3">
+                    <div class="text-muted" style="font-size:13px;">
+                        Menampilkan
+                        <strong>{{ $members->firstItem() ?? 0 }}</strong>
+                        –
+                        <strong>{{ $members->lastItem() ?? 0 }}</strong>
+                        dari
+                        <strong>{{ $members->total() }}</strong>
+                        data member
+                    </div>
+                    <div>
+                        {{ $members->onEachSide(1)->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -237,6 +251,29 @@
 
     .text-pink {
         color: #ff69b4 !important;
+    }
+
+    /* ===== PAGINATION ===== */
+    .card-footer .pagination {
+        margin: 0 !important;
+    }
+    .card-footer .pagination .page-item .page-link {
+        font-size: 13px;
+        padding: 5px 10px;
+        border-radius: 6px !important;
+        margin: 0 2px;
+        border-color: #e2e8f0;
+        color: #4e73df;
+    }
+    .card-footer .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        border-color: #4e73df;
+        color: #fff;
+    }
+    .card-footer .pagination .page-item.disabled .page-link {
+        color: #adb5bd;
+        background: transparent;
+        border: none;
     }
 </style>
 

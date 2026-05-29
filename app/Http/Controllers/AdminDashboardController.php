@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Presence;
 use App\Models\Transaction;
+use App\Models\PtSubscription;
 use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
@@ -40,8 +41,8 @@ class AdminDashboardController extends Controller
         $totalProducts = Product::count();
 
         // 5. STATISTIK TRANSAKSI (INCOME)
-        $totalIncome = Transaction::where('status', 'completed')->sum('grand_total');
-        $thisMonthIncome = Transaction::where('status', 'completed')
+        $totalIncome = Transaction::where('status', 'paid')->sum('grand_total');
+        $thisMonthIncome = Transaction::where('status', 'paid')
             ->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->sum('grand_total');
@@ -61,6 +62,15 @@ class AdminDashboardController extends Controller
         // 10. DATA UNTUK CHART - COACH PERFORMANCE
         $coachPerformanceChart = $this->getCoachPerformanceChart();
 
+        // 11. DATA UNTUK CHART - INCOME BREAKDOWN (TAMBAHAN BARU)
+        $incomeBreakdownChart = $this->getIncomeBreakdownChart();
+
+        // 12. DATA UNTUK CHART - MEMBER AKTIF TREND (TAMBAHAN BARU)
+        $memberActiveTrendChart = $this->getMemberActiveTrendChart();
+
+        // 13. DATA PERSONAL TRAINER
+        $ptData = $this->getPtData();
+
         return view('admin.dashboard', [
             'totalMembers' => $totalMembers,
             'newMembersThisMonth' => $newMembersThisMonth,
@@ -77,8 +87,13 @@ class AdminDashboardController extends Controller
             'attendanceChart' => $attendanceChart,
             'popularClassesChart' => $popularClassesChart,
             'coachPerformanceChart' => $coachPerformanceChart,
+            'incomeBreakdownChart' => $incomeBreakdownChart,
+            'memberActiveTrendChart' => $memberActiveTrendChart,
+            'ptData' => $ptData,
         ]);
     }
+
+    // Realtime API endpoint untuk data PT (tidak digunakan, dihapus)
 
     // Chart: Member Registration (12 Bulan)
     private function getMemberRegistrationChart()
@@ -102,7 +117,7 @@ class AdminDashboardController extends Controller
         ];
     }
 
-    // Chart: Income (12 Bulan)
+    // Chart: Income (12 Bulan) - termasuk income PT
     private function getIncomeChart()
     {
         $months = [];
@@ -112,16 +127,23 @@ class AdminDashboardController extends Controller
             $month = Carbon::now()->subMonths($i);
             $months[] = $month->format('M');
 
-            $income = Transaction::where('status', 'completed')
+            $txIncome = Transaction::where('status', 'paid')
                 ->whereMonth('created_at', $month->month)
                 ->whereYear('created_at', $month->year)
                 ->sum('grand_total');
-            $data[] = (int) $income;
+
+            $ptIncome = PtSubscription::where('payment_status', 'paid')
+                ->whereMonth('pt_subscriptions.updated_at', $month->month)
+                ->whereYear('pt_subscriptions.updated_at', $month->year)
+                ->join('pt_packages', 'pt_subscriptions.pt_package_id', '=', 'pt_packages.id')
+                ->sum('pt_packages.price');
+
+            $data[] = (int)($txIncome + $ptIncome);
         }
 
         return [
             'labels' => $months,
-            'data' => $data,
+            'data'   => $data,
         ];
     }
 
@@ -169,6 +191,115 @@ class AdminDashboardController extends Controller
         return [
             'labels' => $coaches->pluck('name')->toArray(),
             'data' => $coaches->pluck('schedules_count')->toArray(),
+        ];
+    }
+
+    // Chart: Income Breakdown per bulan (Membership vs Produk vs Kelas vs PT)
+    private function getIncomeBreakdownChart()
+    {
+        $months = [];
+        $membership = [];
+        $product = [];
+        $kelas = [];
+        $pt = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $months[] = $month->format('M');
+
+            $membership[] = (int) Transaction::where('status', 'paid')
+                ->whereMonth('created_at', $month->month)
+                ->whereYear('created_at', $month->year)
+                ->whereHas('items', function ($q) {
+                    $q->where('itemable_type', 'App\Models\MembershipPackage');
+                })->sum('grand_total');
+
+            $product[] = (int) Transaction::where('status', 'paid')
+                ->whereMonth('created_at', $month->month)
+                ->whereYear('created_at', $month->year)
+                ->whereHas('items', function ($q) {
+                    $q->where('itemable_type', 'App\Models\Product');
+                })->sum('grand_total');
+
+            $kelas[] = (int) Transaction::where('status', 'paid')
+                ->whereMonth('created_at', $month->month)
+                ->whereYear('created_at', $month->year)
+                ->whereHas('items', function ($q) {
+                    $q->where('itemable_type', 'App\Models\ClassType');
+                })->sum('grand_total');
+
+            $pt[] = (int) PtSubscription::where('payment_status', 'paid')
+                ->whereMonth('pt_subscriptions.updated_at', $month->month)
+                ->whereYear('pt_subscriptions.updated_at', $month->year)
+                ->join('pt_packages', 'pt_subscriptions.pt_package_id', '=', 'pt_packages.id')
+                ->sum('pt_packages.price');
+        }
+
+        return [
+            'labels'     => $months,
+            'membership' => $membership,
+            'product'    => $product,
+            'kelas'      => $kelas,
+            'pt'         => $pt,
+        ];
+    }
+
+    // Chart: Tren Member Terdaftar vs Member Aktif per bulan (6 bulan)
+    private function getMemberActiveTrendChart()
+    {
+        $months = [];
+        $registered = [];
+        $active = [];
+
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $months[] = $month->format('M Y');
+
+            $registered[] = Member::whereMonth('created_at', $month->month)
+                ->whereYear('created_at', $month->year)
+                ->count();
+
+            $active[] = Presence::whereMonth('created_at', $month->month)
+                ->whereYear('created_at', $month->year)
+                ->distinct('member_id')
+                ->count('member_id');
+        }
+
+        return [
+            'labels'     => $months,
+            'registered' => $registered,
+            'active'     => $active,
+        ];
+    }
+
+    // Data Personal Trainer untuk Dashboard
+    private function getPtData()
+    {
+        // Jumlah langganan PT aktif saat ini
+        $totalPtActive = PtSubscription::where('status', 'active')->count();
+
+        // Jumlah langganan PT pending (menunggu konfirmasi)
+        $totalPtPending = PtSubscription::where('status', 'pending')->count();
+
+        // Total pendapatan dari PT (yang sudah dibayar)
+        $totalPtIncome = PtSubscription::where('payment_status', 'paid')
+            ->join('pt_packages', 'pt_subscriptions.pt_package_id', '=', 'pt_packages.id')
+            ->sum('pt_packages.price');
+
+        // Pendapatan PT bulan ini
+        $thisMonthPtIncome = PtSubscription::where('payment_status', 'paid')
+            ->whereMonth('paid_at', Carbon::now()->month)
+            ->whereYear('paid_at', Carbon::now()->year)
+            ->join('pt_packages', 'pt_subscriptions.pt_package_id', '=', 'pt_packages.id')
+            ->sum('pt_packages.price');
+
+        // Daftar 10 member PT terbaru - tidak digunakan di dashboard (ada di /admin/pt-subscriptions)
+
+        return [
+            'totalPtActive'      => $totalPtActive,
+            'totalPtPending'     => $totalPtPending,
+            'totalPtIncome'      => (float) $totalPtIncome,
+            'thisMonthPtIncome'  => (float) $thisMonthPtIncome,
         ];
     }
 }

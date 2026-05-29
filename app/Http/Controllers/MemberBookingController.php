@@ -61,7 +61,8 @@ class MemberBookingController extends Controller
                 'day'         => $schedule->day, // Tetap tampilkan nama hari Indo
                 'time'        => Carbon::parse($schedule->start_time)->format('H:i') . ' - ' . Carbon::parse($schedule->end_time)->format('H:i'),
                 'real_date'   => $targetDate,
-                'is_booked'   => $isBooked
+                'is_booked'   => $isBooked,
+                'price'       => $schedule->classType->price
             ];
         }
 
@@ -101,15 +102,21 @@ class MemberBookingController extends Controller
         return redirect()->route('booking.history')->with('success', 'Booking berhasil! Jangan terlambat ya.');
     }
 
-    // 3. RIWAYAT BOOKING SAYA
     public function history()
     {
-        $bookings = Booking::with(['schedule.classType', 'schedule.coach'])
-                           ->where('user_id', Auth::id())
-                           ->latest()
-                           ->get();
+        $baseQuery = Booking::where('user_id', Auth::id());
+        
+        // Calculate stats
+        $allBookings = $baseQuery->get();
+        $totalBookings = $allBookings->count();
+        $activeBookings = $allBookings->filter(fn($b) => !\Carbon\Carbon::parse($b->date)->isPast())->count();
+        $doneBookings = $totalBookings - $activeBookings;
 
-        return view('member.booking.history', compact('bookings'));
+        $bookings = $baseQuery->with(['schedule.classType', 'schedule.coach'])
+                           ->latest()
+                           ->paginate(15);
+
+        return view('member.booking.history', compact('bookings', 'totalBookings', 'activeBookings', 'doneBookings'));
     }
 
     // 4. BATALKAN BOOKING

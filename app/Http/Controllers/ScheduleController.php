@@ -28,15 +28,18 @@ class ScheduleController extends Controller
         $request->validate([
             'day'           => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
             'start_time'    => 'required',
-            'end_time'      => 'required',
             'class_type_id' => 'required|exists:class_types,id',
             'coach_id'      => 'required|exists:coaches,id',
         ]);
 
+        $classType = ClassType::findOrFail($request->class_type_id);
+        $startTime = \Carbon\Carbon::parse($request->start_time);
+        $endTime = $startTime->copy()->addMinutes($classType->duration_minutes);
+
         Schedule::create([
             'day'           => $request->day,
             'start_time'    => $request->start_time,
-            'end_time'      => $request->end_time,
+            'end_time'      => $endTime->format('H:i:s'),
             'class_type_id' => $request->class_type_id,
             'coach_id'      => $request->coach_id,
         ]);

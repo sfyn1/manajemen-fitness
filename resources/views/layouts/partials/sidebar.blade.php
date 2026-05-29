@@ -1,15 +1,15 @@
 <nav class="nxl-navigation">
     <div class="navbar-wrapper">
-        <div class="m-header">
-            <a href="{{ url('/') }}" class="b-brand">
-                <img
-                    src="{{ asset('template/assets/images/logo-full.png') }}"
-                    alt=""
-                    class="logo logo-lg"/>
+        <div class="m-header" style="display: flex; justify-content: center; align-items: center; padding: 1rem 0;">
+            <a href="{{ url('/') }}" class="b-brand" style="display: flex; justify-content: center; width: 100%;">
                 <img
                     src="{{ asset('template/assets/images/logo-abbr.png') }}"
                     alt=""
-                    class="logo logo-sm"/>
+                    class="logo logo-lg" style="height: 64px; width: auto;"/>
+                <img
+                    src="{{ asset('template/assets/images/logo-abbr.png') }}"
+                    alt=""
+                    class="logo logo-sm" style="height: 38px; width: auto;"/>
             </a>
         </div>
         <div class="navbar-content">
@@ -91,16 +91,26 @@
                     </a>
                     <ul class="nxl-submenu">
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.classtypes.index') }}">Jenis Kelas</a>
+                            <a class="nxl-link" href="{{ route('admin.coaches.index') }}">Data Pelatih & PT</a>
                         </li>
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.coaches.index') }}">Data Pelatih</a>
+                            <a class="nxl-link" href="{{ route('admin.classtypes.index') }}">Jenis Kelas Group</a>
                         </li>
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.schedules.index') }}">Atur Jadwal</a>
+                            <a class="nxl-link" href="{{ route('admin.schedules.index') }}">Jadwal Kelas Group</a>
                         </li>
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.presences.coach') }}">Approval</a>
+                            <a class="nxl-link" href="{{ route('admin.presences.coach') }}">Approval Absensi</a>
+                        </li>
+                        <li class="nxl-item nxl-caption-inner" style="padding: 6px 16px;"><small class="text-muted opacity-50">Personal Trainer</small></li>
+                        <li class="nxl-item">
+                            <a class="nxl-link" href="{{ route('admin.pt-packages.index') }}">Paket PT</a>
+                        </li>
+                        <li class="nxl-item">
+                            <a class="nxl-link" href="{{ route('admin.pt-subscriptions.index') }}">Langganan PT Member</a>
+                        </li>
+                        <li class="nxl-item">
+                            <a class="nxl-link" href="{{ route('admin.pt-sessions.index') }}">Monitoring Sesi PT</a>
                         </li>
                     </ul>
                 </li>
@@ -159,7 +169,10 @@
                     </a>
                     <ul class="nxl-submenu">
                         <li class="nxl-item">
-                            <a class="nxl-link" href="{{ route('admin.payouts.index') }}">Gaji Coach</a>
+                            <a class="nxl-link" href="{{ route('admin.payouts.create') }}">Hitung Gaji</a>
+                        </li>
+                        <li class="nxl-item">
+                            <a class="nxl-link" href="{{ route('admin.payouts.index') }}">Riwayat Slip Gaji</a>
                         </li>
                     </ul>
                 </li>

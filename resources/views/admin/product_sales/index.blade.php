@@ -57,6 +57,43 @@
                 </tbody>
             </table>
         </div>
+        <div class="card-footer bg-white border-top d-flex align-items-center justify-content-between flex-wrap gap-2 py-3">
+            <div class="text-muted" style="font-size:13px;">
+                Menampilkan
+                <strong>{{ $transactions->firstItem() ?? 0 }}</strong>
+                –
+                <strong>{{ $transactions->lastItem() ?? 0 }}</strong>
+                dari
+                <strong>{{ $transactions->total() }}</strong>
+                data
+            </div>
+            <div>
+                {{ $transactions->appends(request()->query())->links() }}
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    /* ===== PAGINATION ===== */
+    .card-footer .pagination {
+        margin: 0 !important;
+    }
+    .card-footer .pagination .page-item .page-link {
+        font-size: 13px;
+        padding: 5px 10px;
+        border-radius: 6px !important;
+        margin: 0 2px;
+        border-color: #e2e8f0;
+        color: #4e73df;
+    }
+    .card-footer .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        border-color: #4e73df;
+        color: #fff;
+    }
+    .card-footer .pagination .page-item.disabled .page-link {
+        color: #adb5bd;
+    }
+</style>
 @endsection

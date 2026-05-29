@@ -49,7 +49,14 @@ class CoachDashboardController extends Controller
                 ->count();
         }
 
-        return view('coach.dashboard', compact('schedules', 'targetDate', 'targetDayName'));
+        // Ambil Jadwal Sesi PT sesuai TANGGAL yang dipilih
+        $ptSessions = \App\Models\PtSession::with(['member.user'])
+            ->where('coach_id', $coachId)
+            ->where('session_date', $targetDate->format('Y-m-d'))
+            ->orderBy('start_time')
+            ->get();
+
+        return view('coach.dashboard', compact('schedules', 'ptSessions', 'targetDate', 'targetDayName'));
     }
 
     // PROSES UPLOAD BUKTI FOTO
@@ -62,6 +69,21 @@ class CoachDashboardController extends Controller
 
         $user = Auth::user();
         $schedule = Schedule::with('classType')->findOrFail($request->schedule_id);
+
+        // Pastikan schedule day sesuai dengan hari ini
+        Carbon::setLocale('id');
+        if (Carbon::today()->translatedFormat('l') !== $schedule->day) {
+            return back()->with('error', 'Gagal! Laporan hanya dapat dikirim pada hari jadwal tersebut ('.$schedule->day.').');
+        }
+
+        // Cek apakah sudah lapor hari ini
+        $existing = CoachPresence::where('schedule_id', $schedule->id)
+            ->whereDate('date', Carbon::today())
+            ->first();
+            
+        if ($existing) {
+            return back()->with('error', 'Anda sudah mengirimkan laporan untuk sesi ini hari ini.');
+        }
 
         // Upload File
         $path = $request->file('photo')->store('evidence', 'public');

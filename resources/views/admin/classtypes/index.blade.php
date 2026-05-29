@@ -3,19 +3,22 @@
 @section('content')
 <div class="container-fluid">
 
-    <!-- PAGE HEADER - MODERN DESIGN -->
+    <!-- PAGE HEADER -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <h2 class="mb-1 fw-bold">Jenis Kelas Olahraga</h2>
                 </div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClassTypeModal">
+                    <i class="feather-plus me-1"></i> Tambah Jenis Kelas
+                </button>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Daftar Kelas Tersedia</h4>
@@ -76,47 +79,54 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="col-lg-4">
-            <div class="card bg-light border-0 shadow-none">
-                <div class="card-header bg-transparent border-0">
-                    <h4 class="card-title"><i class="feather-plus-circle me-2"></i>Buat Kelas Baru</h4>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.classtypes.store') }}" method="POST">
-                        @csrf
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Nama Kelas <span class="text-danger">*</span></label>
-                            <input type="text" name="name" class="form-control fw-bold" placeholder="Cth: Zumba Sore" required>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Durasi (Menit)</label>
-                                    <input type="number" name="duration_minutes" class="form-control" value="60">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Harga (Opsional)</label>
-                                    <input type="number" name="price" class="form-control" value="0" placeholder="0 jika gratis">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Deskripsi Singkat</label>
-                            <textarea name="description" class="form-control" rows="3" placeholder="Penjelasan tentang kelas ini..."></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="feather-save me-2"></i> Simpan Kelas
-                        </button>
-                    </form>
-                </div>
+{{-- ===== MODAL TAMBAH JENIS KELAS ===== --}}
+<div class="modal fade" id="addClassTypeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="feather-plus-circle me-2"></i>Tambah Jenis Kelas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            <form action="{{ route('admin.classtypes.store') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Kelas <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" placeholder="Cth: Zumba Sore" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Durasi (Menit)</label>
+                                <input type="number" name="duration_minutes" class="form-control" value="60">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Harga <span class="text-danger">*</span></label>
+                                <input type="number" name="price" class="form-control" value="0" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Deskripsi Singkat</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Penjelasan tentang kelas ini..."></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary fw-bold">
+                        <i class="feather-save me-1"></i> Simpan Kelas
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -16,8 +16,7 @@ class PresenceController extends Controller
         $recentPresences = Presence::with('member.user')
                             ->whereDate('check_in_time', Carbon::today())
                             ->orderBy('check_in_time', 'desc')
-                            ->take(10)
-                            ->get();
+                            ->paginate(15);
 
         return view('admin.presences.scan', compact('recentPresences'));
     }
@@ -101,7 +100,7 @@ class PresenceController extends Controller
                 'presences as visits_total'
             ])
             ->orderBy('visits_today', 'desc') // Yang hadir hari ini paling atas
-            ->get();
+            ->paginate(15);
 
         return view('admin.presences.history', compact('members'));
     }
@@ -118,7 +117,7 @@ class PresenceController extends Controller
             ->whereDate('check_in_time', '>=', $startDate)
             ->whereDate('check_in_time', '<=', $endDate)
             ->orderBy('check_in_time', 'desc')
-            ->get();
+            ->paginate(15);
 
         return view('admin.presences.report', compact('presences', 'startDate', 'endDate'));
     }

@@ -101,6 +101,11 @@ class AuthController extends Controller
         }
 
         if ($user->role === 'coach') {
+            // Cek tipe coach: PT atau Group Coach
+            $coach = $user->coachProfile;
+            if ($coach && $coach->isPersonalTrainer()) {
+                return redirect()->route('coach.pt.sessions');
+            }
             return redirect()->route('coach.dashboard');
         }
 

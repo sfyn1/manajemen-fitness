@@ -30,6 +30,24 @@
     .footer {
         flex-shrink: 0;
     }
+
+    /* Hapus efek blur saat modal terbuka */
+    .modal-backdrop {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    .nxl-navigation,
+    .nxl-header,
+    .nxl-container {
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    body.modal-open .nxl-navigation,
+    body.modal-open .nxl-header,
+    body.modal-open .nxl-container {
+        filter: none !important;
+    }
     </style>
 
 </head>

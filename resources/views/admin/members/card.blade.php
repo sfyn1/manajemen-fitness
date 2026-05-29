@@ -8,7 +8,7 @@
     <div style="height: 100px;"></div>
 
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
+        <div class="col-12 d-flex flex-column align-items-center">
 
             <form id="pdfForm" action="{{ route('admin.members.print-pdf-image') }}" method="POST" style="display:none;">
                 @csrf
@@ -16,7 +16,8 @@
                 <input type="hidden" name="name" value="{{ str_replace(' ', '-', $user->name) }}">
             </form>
 
-            <div id="card-capture-area" style="background-color: #ffffff; padding: 20px; border-radius: 10px; width: fit-content; margin: 0 auto;">
+            <div class="card-scale-wrapper">
+                <div id="card-capture-area" style="background-color: #ffffff; padding: 20px; border-radius: 10px; width: fit-content; margin: 0 auto;">
                 <div class="id-card">
                     <div class="card-bg"></div>
                     <div class="card-header-custom">
@@ -58,6 +59,7 @@
                     </div>
                 </div>
             </div>
+            </div> <!-- End of card-scale-wrapper -->
 
             <div class="text-center mt-5 d-print-none">
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
@@ -233,6 +235,43 @@
     .btn-light:hover {
         background: #f8f9fa;
         color: #212529;
+    }
+
+    /* RESPONSIVE CARD SCALING */
+    .card-scale-wrapper {
+        transform-origin: top center;
+        transition: transform 0.3s ease;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .card-scale-wrapper {
+            transform: scale(0.85);
+            margin-bottom: -50px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-scale-wrapper {
+            transform: scale(0.65);
+            margin-bottom: -110px;
+        }
+    }
+
+    @media (max-width: 450px) {
+        .card-scale-wrapper {
+            transform: scale(0.55);
+            margin-bottom: -140px;
+        }
+    }
+    
+    @media (max-width: 380px) {
+        .card-scale-wrapper {
+            transform: scale(0.45);
+            margin-bottom: -180px;
+        }
     }
 </style>
 @endsection

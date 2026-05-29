@@ -16,7 +16,7 @@ class ProductTransactionController extends Controller
     {
         $transactions = Transaction::whereHas('items', function($q) {
             $q->where('itemable_type', 'App\Models\Product');
-        })->with('items')->latest()->get();
+        })->with('items')->latest()->paginate(20);
 
         return view('admin.product_sales.index', compact('transactions'));
     }

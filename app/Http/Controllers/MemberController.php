@@ -18,7 +18,7 @@ class MemberController extends Controller
     // 1. FITUR MENAMPILKAN DAFTAR MEMBER
     public function index()
     {
-        $members = User::where('role', 'member')->with('member')->latest()->get();
+        $members = User::where('role', 'member')->with('member')->latest()->paginate(15);
         
         // Update status jika sudah expired
         foreach ($members as $member) {

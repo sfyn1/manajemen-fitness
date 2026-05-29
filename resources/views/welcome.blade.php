@@ -696,7 +696,7 @@
 {{-- ══ NAVBAR ══ --}}
 <nav class="top-nav" id="navbar">
     <div class="nav-inner">
-        <a href="#" class="nav-logo">⚡ <span class="a">GMF</span></a>
+        <a href="#" class="nav-logo"><img src="{{ asset('template/assets/images/logo-abbr.png') }}" style="height:48px" alt="GMF"></a>
         <div class="nav-links">
             <a href="#tentang"  class="nav-link-item">Tentang</a>
             <a href="#kelas"    class="nav-link-item">Kelas</a>
@@ -1073,7 +1073,7 @@
 {{-- ══ FOOTER ══ --}}
 <footer>
     <div class="footer-inner">
-        <div class="footer-logo">⚡ <span class="a">GMF</span> — Gintung Master Fitness</div>
+        <div class="footer-logo"><img src="{{ asset('template/assets/images/logo-abbr.png') }}" style="height:36px; margin-right:8px;" alt="GMF"> Gintung Master Fitness</div>
         <div class="footer-copy">
             &copy; {{ date('Y') }} Sufyan Dzaki · Skripsi UIN Jakarta
         </div>
